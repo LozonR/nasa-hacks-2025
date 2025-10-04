@@ -7,6 +7,7 @@ import {
   Circle,
   Rectangle,
   useMap,
+  useMapEvent
 } from "react-leaflet";
 import { Icon } from "leaflet";
 import { sampleSharks } from "../data/sampleSharks";
@@ -23,6 +24,27 @@ const sharkIcon = new Icon({
   iconAnchor: [16, 16],
   popupAnchor: [0, -16],
 });
+
+function MapMoveListener({ onMove }) {
+  const map = useMap();
+  useMapEvent("moveend", () => {
+    const center = map.getCenter();
+    let wrappedLng = center.lng;
+    let wrapped = false;
+    if (center.lng > 180) {
+      wrappedLng = center.lng - 359;
+      wrapped = true;
+    } else if (center.lng < -180) {
+      wrappedLng = center.lng + 359;
+      wrapped = true;
+    }
+    if (wrapped) {
+      map.setView([center.lat, wrappedLng], map.getZoom(), { animate: false});
+    }
+    onMove({ lat: center.lat, lng: wrappedLng });
+  });
+  return null;
+}
 
 const sharkIconLarge = new Icon({
   iconUrl: "/shark.webp",
@@ -100,11 +122,11 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
           url="/public/Phytoplankton.png"
           bounds={
             new LatLngBounds([
-              [-70, -180],
-              [70, 180],
+              [-90, -180],
+              [90, 180],
             ])
           }
-          opacity={0.5}
+          opacity={0.8}
         />
       )}
 
@@ -199,6 +221,8 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
           )}
         </div>
       ))}
+
+      <MapMoveListener onMove={(center) => {}} />
 
       <MapController zoomToSharkRef={zoomToSharkRef} />
       <LayerControls layers={layers} onToggle={toggleLayer} />

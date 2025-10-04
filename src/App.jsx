@@ -98,7 +98,7 @@ function App() {
               Back End - Chase MaClean, Riley Lozon<br></br>
               API - Liangyue Zhao
             </p>
-            <img src = "https://sh-4rk.carrd.co/assets/images/image01.png?v=5e18f3a1"/> 
+            <img src = "/sh4rk.png"/> 
             <p>
               We do not own any of the art used, <a href = "https://x.com/SH_4RK">credit to @SH4RK on twitter for the art.</a>
             </p>
