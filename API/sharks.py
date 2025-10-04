@@ -70,8 +70,8 @@ def get_sharks() -> list[Shark]:
     return sharks
 
 
-def get_travel_log(shark: Shark):
-    travel = requests.get(f"{API}/pois/{shark.id}/motion/with-meta/").json()
+def get_travel_log(shark_id: int) -> TravelLog:
+    travel = requests.get(f"{API}/pois/{shark_id}/motion/with-meta/").json()
 
     spots = []
     for spot in travel["motion"]:

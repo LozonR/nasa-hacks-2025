@@ -18,3 +18,15 @@ def get_sharks():
         sharksJSON.append(shark.__dict__)
 
     return sharksJSON
+
+
+@app.route("/api/sharks/journey/<int:shark_id>")
+def get_shark_journey(shark_id: int):
+    journey = API.sharks.get_travel_log(shark_id)
+
+    locations = []
+
+    for loc in journey.locations:
+        locations.append(loc.__dict__)
+
+    return locations
