@@ -19,11 +19,17 @@ import { LatLngBounds } from "leaflet";
 
 
 const sharkIcon = new Icon({
-  iconUrl:
-    "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDA3OGQ0Ij48cGF0aCBkPSJNMjAgMTFjMC0yLjItMS44LTQtNC00cy00IDEuOC00IDRjMCAxLjQuNyAyLjYgMS44IDMuM2wtLjktLjljLS40LS40LS40LTEgMC0xLjRzMS0uNCAxLjQgMGwxLjcgMS43Yy44LS42IDEuMy0xLjUgMS4zLTIuN3ptLTYgMGMwLS42LjQtMSAxLTFzMSAuNCAxIDEtLjQgMS0xIDEtMS0uNC0xLTF6bS02IDBIMFY5aDJ2MnptMTAtNGgtMlY1aDJ2MnoiLz48L3N2Zz4=",
+  iconUrl: "/shark.webp",
   iconSize: [32, 32],
   iconAnchor: [16, 16],
   popupAnchor: [0, -16],
+});
+
+const sharkIconLarge = new Icon({
+  iconUrl: "/shark.webp",
+    iconSize: [48, 48], 
+  iconAnchor: [24, 24],
+  popupAnchor: [0, -24],
 });
 
 function MapController({ zoomToSharkRef }) {
@@ -54,6 +60,8 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
       legend: "Ocean temp zones",
     },
   });
+  
+  const [selectedSharkId, setSelectedSharkId] = useState(null);
 
   const toggleLayer = (layerKey) => {
     setLayers((prev) => ({
@@ -118,12 +126,19 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
         {layers.sharks.enabled && (
           <Marker
             position={[shark.lat, shark.lng]}
-            icon={sharkIcon}
+            icon={selectedSharkId === shark.id ? sharkIconLarge : sharkIcon}
             eventHandlers={{
-              click: () => onSharkSelect(shark),
+              click: () => {
+                setSelectedSharkId(shark.id);
+                onSharkSelect(shark);
+              },
             }}
           >
-            <Popup>
+             <Popup
+                eventHandlers={{
+                  close: () => setSelectedSharkId(null),
+                }}
+              >
               <div>
                 <strong>{shark.name}</strong>
                 <br />

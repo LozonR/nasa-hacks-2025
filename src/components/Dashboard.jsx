@@ -54,18 +54,6 @@ function Dashboard({ selectedShark }) {
           </div>
         </div>
       </div>
-
-      <div className="recent-prey">
-        <h3>Recent Prey Detected</h3>
-        <ul>
-          {selectedShark.recentPrey.map((prey, idx) => (
-            <li key={idx}>
-              <span className="prey-name">{prey.species}</span>
-              <span className="prey-time">{prey.time}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
     </div>
   )
 }
