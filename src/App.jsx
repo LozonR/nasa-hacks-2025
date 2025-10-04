@@ -1,12 +1,22 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import SharkMap from "./components/SharkMap";
 import Dashboard from "./components/Dashboard";
 import Menu from "./components/Menu";
+import { sampleSharks } from "./data/sampleSharks";
 import "./App.css";
 
 function App() {
   const [selectedShark, setSelectedShark] = useState(null);
   const [currentView, setCurrentView] = useState("map");
+  const zoomToSharkRef = useRef(null);
+
+  const handleRandomSharkZoom = () => {
+    const randomShark = sampleSharks[Math.floor(Math.random() * sampleSharks.length)];
+    if (zoomToSharkRef.current) {
+      zoomToSharkRef.current(randomShark);
+      setSelectedShark(randomShark);
+    }
+  };
 
   const renderView = () => {
     switch (currentView) {
@@ -14,7 +24,7 @@ function App() {
         return (
           <>
             <div className="map-container">
-              <SharkMap onSharkSelect={setSelectedShark} />
+              <SharkMap onSharkSelect={setSelectedShark} zoomToSharkRef={zoomToSharkRef} />
             </div>
             <div className="sidebar">
               <Dashboard selectedShark={selectedShark} />
@@ -92,7 +102,11 @@ function App() {
 
   return (
     <div className="app">
-      <Menu onViewChange={setCurrentView} currentView={currentView} />
+      <Menu
+        onViewChange={setCurrentView}
+        currentView={currentView}
+        onRandomSharkZoom={handleRandomSharkZoom}
+      />
 
       <header className="header">
         <h1>🦈 Shark Foraging Habitat Tracker</h1>

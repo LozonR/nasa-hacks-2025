@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './Menu.css'
 
-function Menu({ onViewChange, currentView }) {
+function Menu({ onViewChange, currentView, onRandomSharkZoom }) {
   const [isOpen, setIsOpen] = useState(false)
 
   const menuItems = [
@@ -12,6 +12,16 @@ function Menu({ onViewChange, currentView }) {
     { id: 'data-sources', icon: '🛰️', label: 'Data Sources' },
     { id: 'about', icon: 'ℹ️', label: 'About' }
   ]
+
+  const handleRandomShark = () => {
+    if (currentView !== 'map') {
+      onViewChange('map')
+    }
+    setTimeout(() => {
+      onRandomSharkZoom()
+    }, currentView !== 'map' ? 100 : 0)
+    setIsOpen(false)
+  }
 
   return (
     <>
@@ -44,6 +54,16 @@ function Menu({ onViewChange, currentView }) {
             </li>
           ))}
         </ul>
+
+        <div className="menu-action">
+          <button
+            className="menu-item random-shark-btn"
+            onClick={handleRandomShark}
+          >
+            <span className="menu-icon">🎲</span>
+            <span className="menu-label">Random Shark</span>
+          </button>
+        </div>
 
         <div className="menu-footer">
           <div className="menu-stats">
