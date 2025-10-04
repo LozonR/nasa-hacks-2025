@@ -17,7 +17,6 @@ import "./SharkMap.css";
 import { ImageOverlay } from "react-leaflet";
 import { LatLngBounds } from "leaflet";
 
-
 const sharkIcon = new Icon({
   iconUrl: "/shark.webp",
   iconSize: [32, 32],
@@ -38,7 +37,7 @@ function MapController({ zoomToSharkRef }) {
   zoomToSharkRef.current = (shark) => {
     map.setView([shark.lat, shark.lng], 8, {
       animate: true,
-      duration: 1
+      duration: 1,
     });
   };
 
@@ -76,27 +75,33 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
   const heatmapPoints = generateForagingHeatmap();
 
   return (
-  <MapContainer
-    center={[20, -40]}
-    zoom={3}
-    className="shark-map"
-    scrollWheelZoom={true}
-  >
-    <TileLayer
-      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    />
+    <MapContainer
+      center={[20, -40]}
+      zoom={3}
+      className="shark-map"
+      scrollWheelZoom={true}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
 
-    {/* Phytoplankton Image Overlay */}
-    <ImageOverlay
-      url="/public/Phytoplankton.png"
-      bounds={new LatLngBounds([[-60, -180], [85, 180]])}
-      opacity={0.5}
-    />
+      {/* Phytoplankton Image Overlay */}
+      <ImageOverlay
+        url="/public/Phytoplankton.png"
+        bounds={
+          new LatLngBounds([
+            [-71, -180],
+            [71, 180],
+          ])
+        }
+        opacity={0.5}
+      />
 
-    {/* Heatmap Layer */}
-    {layers.heatmap.enabled && <HeatmapLayer points={heatmapPoints} />}
+      {/* Heatmap Layer */}
+      {layers.heatmap.enabled && <HeatmapLayer points={heatmapPoints} />}
 
+<<<<<<< HEAD
     {/* SST Zones */}
     {layers.sst.enabled &&
       sstZones.map((zone, idx) => (
@@ -132,6 +137,19 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
                 setSelectedSharkId(shark.id);
                 onSharkSelect(shark);
               },
+=======
+      {/* SST Zones */}
+      {layers.sst.enabled &&
+        sstZones.map((zone, idx) => (
+          <Rectangle
+            key={idx}
+            bounds={zone.bounds}
+            pathOptions={{
+              color: zone.color,
+              fillColor: zone.color,
+              fillOpacity: 0.15,
+              weight: 1,
+>>>>>>> 5e3f6e4 (photobleh map aligning)
             }}
           >
              <Popup
@@ -140,38 +158,59 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
                 }}
               >
               <div>
-                <strong>{shark.name}</strong>
+                <strong>SST Zone</strong>
                 <br />
-                Species: {shark.species}
-                <br />
-                Tag ID: {shark.tagId}
-                <br />
-                Last Updated: {shark.lastUpdate}
+                Temperature: {zone.temp}
               </div>
             </Popup>
-          </Marker>
-        )}
+          </Rectangle>
+        ))}
 
-        {layers.foragingZones.enabled && (
-          <Circle
-            center={[shark.lat, shark.lng]}
-            radius={shark.foragingRadius * 1000}
-            pathOptions={{
-              color: "#ffeb3b",
-              fillColor: "#ffeb3b",
-              fillOpacity: 0.1,
-              weight: 2,
-              dashArray: "5, 5",
-            }}
-          />
-        )}
-      </div>
-    ))}
+      {/* Shark Markers and Foraging Zones */}
+      {sampleSharks.map((shark) => (
+        <div key={shark.id}>
+          {layers.sharks.enabled && (
+            <Marker
+              position={[shark.lat, shark.lng]}
+              icon={sharkIcon}
+              eventHandlers={{
+                click: () => onSharkSelect(shark),
+              }}
+            >
+              <Popup>
+                <div>
+                  <strong>{shark.name}</strong>
+                  <br />
+                  Species: {shark.species}
+                  <br />
+                  Tag ID: {shark.tagId}
+                  <br />
+                  Last Updated: {shark.lastUpdate}
+                </div>
+              </Popup>
+            </Marker>
+          )}
 
-    <MapController zoomToSharkRef={zoomToSharkRef} />
-    <LayerControls layers={layers} onToggle={toggleLayer} />
-  </MapContainer>
-);
+          {layers.foragingZones.enabled && (
+            <Circle
+              center={[shark.lat, shark.lng]}
+              radius={shark.foragingRadius * 1000}
+              pathOptions={{
+                color: "#ffeb3b",
+                fillColor: "#ffeb3b",
+                fillOpacity: 0.1,
+                weight: 2,
+                dashArray: "5, 5",
+              }}
+            />
+          )}
+        </div>
+      ))}
+
+      <MapController zoomToSharkRef={zoomToSharkRef} />
+      <LayerControls layers={layers} onToggle={toggleLayer} />
+    </MapContainer>
+  );
 }
 
 export default SharkMap;
