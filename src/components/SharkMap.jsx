@@ -95,16 +95,18 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
       />
 
       {/* Phytoplankton Image Overlay */}
-      <ImageOverlay
-        url="/public/Phytoplankton.png"
-        bounds={
-          new LatLngBounds([
-            [-70, -180],
-            [70, 180],
-          ])
-        }
-        opacity={0.5}
-      />
+      {layers.ppo.enabled && (
+        <ImageOverlay
+          url="/public/Phytoplankton.png"
+          bounds={
+            new LatLngBounds([
+              [-70, -180],
+              [70, 180],
+            ])
+          }
+          opacity={0.5}
+        />
+      )}
 
       {/* Depth Image Overlay */}
       <ImageOverlay
