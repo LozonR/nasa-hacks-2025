@@ -33,10 +33,17 @@ class Shark:
         self.location = location
 
 
+class TravelSpot:
+    def __init__(self, lat: float, long: float, date: str):
+        self.lat = lat
+        self.long = long
+        self.date = date
+
+
 class TravelLog:
     def __init__(
         self,
-        locations: list[(float, float)]
+        locations: list[TravelSpot]
     ):
         self.locations = locations
 
@@ -69,7 +76,8 @@ def get_travel_log(shark: Shark):
     spots = []
     for spot in travel["motion"]:
         coordinates = spot["point"]["coordinates"]
-        spots.append((coordinates[0], coordinates[1]))
+        time = spot["dt_move"]
+        spots.append(TravelSpot(coordinates[0], coordinates[1], time))
 
     log = TravelLog(spots)
     return log
