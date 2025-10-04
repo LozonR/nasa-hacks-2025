@@ -109,16 +109,18 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
       )}
 
       {/* Depth Image Overlay */}
-      <ImageOverlay
-        url="/public/depth.png"
-        bounds={
-          new LatLngBounds([
-            [-180, -180],
-            [180, 180],
-          ])
-        }
-        opacity={0.5}
-      />
+      {layers.depth.enabled && (
+        <ImageOverlay
+          url="/public/depth.png"
+          bounds={
+            new LatLngBounds([
+              [-180, -180],
+              [180, 180],
+            ])
+          }
+          opacity={0.5}
+        />
+      )}
 
       {/* Heatmap Layer */}
       {layers.heatmap.enabled && <HeatmapLayer points={heatmapPoints} />}
