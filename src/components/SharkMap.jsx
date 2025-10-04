@@ -47,7 +47,7 @@ function MapMoveListener({ onMove }) {
 }
 
 const sharkIconLarge = new Icon({
-  iconUrl: "/shark.webp",
+  iconUrl: "/static/shark.webp",
   iconSize: [48, 48],
   iconAnchor: [24, 24],
   popupAnchor: [0, -24],
