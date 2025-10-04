@@ -95,28 +95,32 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
       />
 
       {/* Phytoplankton Image Overlay */}
-      <ImageOverlay
-        url="/public/Phytoplankton.png"
-        bounds={
-          new LatLngBounds([
-            [-70, -180],
-            [70, 180],
-          ])
-        }
-        opacity={0.5}
-      />
+      {layers.ppo.enabled && (
+        <ImageOverlay
+          url="/public/Phytoplankton.png"
+          bounds={
+            new LatLngBounds([
+              [-70, -180],
+              [70, 180],
+            ])
+          }
+          opacity={0.5}
+        />
+      )}
 
       {/* Depth Image Overlay */}
-      <ImageOverlay
-        url="/public/depth.png"
-        bounds={
-          new LatLngBounds([
-            [-70, -180],
-            [70, 180],
-          ])
-        }
-        opacity={0.5}
-      />
+      {layers.depth.enabled && (
+        <ImageOverlay
+          url="/public/depth.png"
+          bounds={
+            new LatLngBounds([
+              [-70, -180],
+              [70, 180],
+            ])
+          }
+          opacity={0.5}
+        />
+      )}
 
       {/* Heatmap Layer */}
       {layers.heatmap.enabled && <HeatmapLayer points={heatmapPoints} />}
