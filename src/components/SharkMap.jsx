@@ -26,7 +26,7 @@ const sharkIcon = new Icon({
 
 const sharkIconLarge = new Icon({
   iconUrl: "/shark.webp",
-    iconSize: [48, 48], 
+  iconSize: [48, 48],
   iconAnchor: [24, 24],
   popupAnchor: [0, -24],
 });
@@ -59,7 +59,7 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
       legend: "Ocean temp zones",
     },
   });
-  
+
   const [selectedSharkId, setSelectedSharkId] = useState(null);
 
   const toggleLayer = (layerKey) => {
@@ -91,8 +91,8 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
         url="/public/Phytoplankton.png"
         bounds={
           new LatLngBounds([
-            [-71, -180],
-            [71, 180],
+            [-70, -180],
+            [70, 180],
           ])
         }
         opacity={0.5}
@@ -114,11 +114,11 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
               weight: 1,
             }}
           >
-             <Popup
-                eventHandlers={{
-                  close: () => setSelectedSharkId(null),
-                }}
-              >
+            <Popup
+              eventHandlers={{
+                close: () => setSelectedSharkId(null),
+              }}
+            >
               <div>
                 <strong>SST Zone</strong>
                 <br />
@@ -129,52 +129,52 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
         ))}
 
       {/* Shark Markers and Foraging Zones */}
-    {sampleSharks.map((shark) => (
-      <div key={shark.id}>
-        {layers.sharks.enabled && (
-          <Marker
-            position={[shark.lat, shark.lng]}
-            icon={selectedSharkId === shark.id ? sharkIconLarge : sharkIcon}
-            eventHandlers={{
-              click: () => {
-                setSelectedSharkId(shark.id);
-                onSharkSelect(shark);
-              },
-            }}
-          >
-             <Popup
+      {sampleSharks.map((shark) => (
+        <div key={shark.id}>
+          {layers.sharks.enabled && (
+            <Marker
+              position={[shark.lat, shark.lng]}
+              icon={selectedSharkId === shark.id ? sharkIconLarge : sharkIcon}
+              eventHandlers={{
+                click: () => {
+                  setSelectedSharkId(shark.id);
+                  onSharkSelect(shark);
+                },
+              }}
+            >
+              <Popup
                 eventHandlers={{
                   close: () => setSelectedSharkId(null),
                 }}
               >
-              <div>
-                <strong>{shark.name}</strong>
-                <br />
-                Species: {shark.species}
-                <br />
-                Tag ID: {shark.tagId}
-                <br />
-                Last Updated: {shark.lastUpdate}
-              </div>
-            </Popup>
-          </Marker>
-        )}
+                <div>
+                  <strong>{shark.name}</strong>
+                  <br />
+                  Species: {shark.species}
+                  <br />
+                  Tag ID: {shark.tagId}
+                  <br />
+                  Last Updated: {shark.lastUpdate}
+                </div>
+              </Popup>
+            </Marker>
+          )}
 
-        {layers.foragingZones.enabled && (
-          <Circle
-            center={[shark.lat, shark.lng]}
-            radius={shark.foragingRadius * 1000}
-            pathOptions={{
-              color: "#ffeb3b",
-              fillColor: "#ffeb3b",
-              fillOpacity: 0.1,
-              weight: 2,
-              dashArray: "5, 5",
-            }}
-          />
-        )}
-      </div>
-    ))}
+          {layers.foragingZones.enabled && (
+            <Circle
+              center={[shark.lat, shark.lng]}
+              radius={shark.foragingRadius * 1000}
+              pathOptions={{
+                color: "#ffeb3b",
+                fillColor: "#ffeb3b",
+                fillOpacity: 0.1,
+                weight: 2,
+                dashArray: "5, 5",
+              }}
+            />
+          )}
+        </div>
+      ))}
 
       <MapController zoomToSharkRef={zoomToSharkRef} />
       <LayerControls layers={layers} onToggle={toggleLayer} />
