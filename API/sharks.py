@@ -22,12 +22,10 @@ class Shark:
     def __init__(
             self,
             name: str,
-            gender: str,
             species: str,
             location: (float, float)
     ):
         self.name = name
-        self.gender = gender
         self.species = species
         self.location = location
 
@@ -46,12 +44,23 @@ def get_sharks() -> list[Shark]:
             sharks.append(
                 Shark(
                     properties["name"],
-                    properties["gender"],
                     properties["species"],
                     (location[0], location[1])
                 ))
 
     return sharks
+
+
+def get_travel_log(shark_name: str):
+    pass
+
+
+def get_elevation(lat: float, long: float) -> float:
+    elevationJSON = requests.get(
+        f"https://api.open-meteo.com/v1/elevation?latitude={lat}&longitude={long}"
+    ).json()
+
+    return elevationJSON["elevation"][0]
 
 
 def main():
