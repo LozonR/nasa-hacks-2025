@@ -58,6 +58,14 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
       enabled: false,
       legend: "Ocean temp zones",
     },
+    ppo: {
+      name: "Photoplankton Overlay",
+      enabled: false,
+    },
+    depth: {
+      name: "Depth Overlay",
+      enabled: false
+    }
   });
   
   const [selectedSharkId, setSelectedSharkId] = useState(null);
