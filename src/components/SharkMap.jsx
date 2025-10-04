@@ -111,8 +111,8 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
         url="/public/depth.png"
         bounds={
           new LatLngBounds([
-            [-70, -180],
-            [70, 180],
+            [-180, -180],
+            [180, 180],
           ])
         }
         opacity={0.5}
