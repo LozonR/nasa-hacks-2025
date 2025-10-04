@@ -101,43 +101,6 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
       {/* Heatmap Layer */}
       {layers.heatmap.enabled && <HeatmapLayer points={heatmapPoints} />}
 
-<<<<<<< HEAD
-    {/* SST Zones */}
-    {layers.sst.enabled &&
-      sstZones.map((zone, idx) => (
-        <Rectangle
-          key={idx}
-          bounds={zone.bounds}
-          pathOptions={{
-            color: zone.color,
-            fillColor: zone.color,
-            fillOpacity: 0.15,
-            weight: 1,
-          }}
-        >
-          <Popup>
-            <div>
-              <strong>SST Zone</strong>
-              <br />
-              Temperature: {zone.temp}
-            </div>
-          </Popup>
-        </Rectangle>
-      ))}
-
-    {/* Shark Markers and Foraging Zones */}
-    {sampleSharks.map((shark) => (
-      <div key={shark.id}>
-        {layers.sharks.enabled && (
-          <Marker
-            position={[shark.lat, shark.lng]}
-            icon={selectedSharkId === shark.id ? sharkIconLarge : sharkIcon}
-            eventHandlers={{
-              click: () => {
-                setSelectedSharkId(shark.id);
-                onSharkSelect(shark);
-              },
-=======
       {/* SST Zones */}
       {layers.sst.enabled &&
         sstZones.map((zone, idx) => (
@@ -149,7 +112,6 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
               fillColor: zone.color,
               fillOpacity: 0.15,
               weight: 1,
->>>>>>> 5e3f6e4 (photobleh map aligning)
             }}
           >
              <Popup
@@ -167,45 +129,52 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
         ))}
 
       {/* Shark Markers and Foraging Zones */}
-      {sampleSharks.map((shark) => (
-        <div key={shark.id}>
-          {layers.sharks.enabled && (
-            <Marker
-              position={[shark.lat, shark.lng]}
-              icon={sharkIcon}
-              eventHandlers={{
-                click: () => onSharkSelect(shark),
-              }}
-            >
-              <Popup>
-                <div>
-                  <strong>{shark.name}</strong>
-                  <br />
-                  Species: {shark.species}
-                  <br />
-                  Tag ID: {shark.tagId}
-                  <br />
-                  Last Updated: {shark.lastUpdate}
-                </div>
-              </Popup>
-            </Marker>
-          )}
+    {sampleSharks.map((shark) => (
+      <div key={shark.id}>
+        {layers.sharks.enabled && (
+          <Marker
+            position={[shark.lat, shark.lng]}
+            icon={selectedSharkId === shark.id ? sharkIconLarge : sharkIcon}
+            eventHandlers={{
+              click: () => {
+                setSelectedSharkId(shark.id);
+                onSharkSelect(shark);
+              },
+            }}
+          >
+             <Popup
+                eventHandlers={{
+                  close: () => setSelectedSharkId(null),
+                }}
+              >
+              <div>
+                <strong>{shark.name}</strong>
+                <br />
+                Species: {shark.species}
+                <br />
+                Tag ID: {shark.tagId}
+                <br />
+                Last Updated: {shark.lastUpdate}
+              </div>
+            </Popup>
+          </Marker>
+        )}
 
-          {layers.foragingZones.enabled && (
-            <Circle
-              center={[shark.lat, shark.lng]}
-              radius={shark.foragingRadius * 1000}
-              pathOptions={{
-                color: "#ffeb3b",
-                fillColor: "#ffeb3b",
-                fillOpacity: 0.1,
-                weight: 2,
-                dashArray: "5, 5",
-              }}
-            />
-          )}
-        </div>
-      ))}
+        {layers.foragingZones.enabled && (
+          <Circle
+            center={[shark.lat, shark.lng]}
+            radius={shark.foragingRadius * 1000}
+            pathOptions={{
+              color: "#ffeb3b",
+              fillColor: "#ffeb3b",
+              fillOpacity: 0.1,
+              weight: 2,
+              dashArray: "5, 5",
+            }}
+          />
+        )}
+      </div>
+    ))}
 
       <MapController zoomToSharkRef={zoomToSharkRef} />
       <LayerControls layers={layers} onToggle={toggleLayer} />
