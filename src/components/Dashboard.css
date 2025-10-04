@@ -1,0 +1,106 @@
+.dashboard {
+  padding: 1.5rem;
+}
+
+.dashboard-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #64748b;
+  font-size: 1rem;
+}
+
+.shark-details {
+  background: #1e4976;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.shark-details h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  color: #60a5fa;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.label {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.value {
+  color: #fff;
+  font-weight: 500;
+}
+
+.environmental-data {
+  margin-bottom: 1.5rem;
+}
+
+.environmental-data h3,
+.recent-prey h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: #60a5fa;
+}
+
+.env-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.env-card {
+  background: #1e4976;
+  padding: 1rem;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.env-label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-bottom: 0.5rem;
+}
+
+.env-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #60a5fa;
+}
+
+.recent-prey ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recent-prey li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: #1e4976;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+}
+
+.prey-name {
+  font-weight: 500;
+}
+
+.prey-time {
+  color: #94a3b8;
+  font-size: 0.85rem;
+}

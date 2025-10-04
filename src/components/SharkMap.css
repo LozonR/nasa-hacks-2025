@@ -1,0 +1,13 @@
+.shark-map {
+  height: 100%;
+  width: 100%;
+}
+
+.leaflet-popup-content-wrapper {
+  background: #1e293b;
+  color: #fff;
+}
+
+.leaflet-popup-tip {
+  background: #1e293b;
+}
