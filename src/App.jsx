@@ -88,10 +88,19 @@ function App() {
         return (
           <div className="view-placeholder">
             <h2>ℹ️ About This Project</h2>
-            <p>NASA Hackathon 2025 - Earth Science Division</p>
+            <p>NASA Hackathon 2025 - Sharks from Space</p>
             <p>
-              Tracking top ocean predators using satellite data to predict
-              foraging habitats and understand marine ecosystems.
+              The goal of this project is to track and predict the movement of sharks
+              using satellite data to predict foraging habitats and understand marine ecosystems.
+              <br></br><br></br>
+              Team Leader, Merging - Kaitlyn Carbonaro<br></br>
+              Front End - Dan Laurin, Jared Johnston<br></br>
+              Back End - Chase MaClean, Riley Lozon<br></br>
+              API - Liangyue Zhao
+            </p>
+            <img src = "https://sh-4rk.carrd.co/assets/images/image01.png?v=5e18f3a1"/> 
+            <p>
+              We do not own any of the art used, <a href = "https://x.com/SH_4RK">credit to @SH4RK on twitter for the art.</a>
             </p>
           </div>
         );
