@@ -1,6 +1,7 @@
 import requests
 
-API = "https://www.mapotic.com/api/v1/maps/3413/pois.geojson/"
+# API = "https://www.mapotic.com/api/v1/maps/3413/pois.geojson/"
+API = "https://www.mapotic.com/api/v1/maps/3413"
 
 SHARK_CATEGORIES = {
     "White Shark (Carcharodon carcharias)": 1,
@@ -22,16 +23,26 @@ class Shark:
     def __init__(
             self,
             name: str,
+            id: int,
             species: str,
             location: (float, float)
     ):
         self.name = name
+        self.id = id
         self.species = species
         self.location = location
 
 
+class TravelLog:
+    def __init__(
+        self,
+        locations: list[(float, float)]
+    ):
+        self.locations = locations
+
+
 def get_sharks() -> list[Shark]:
-    sharksRaw = requests.get(API)
+    sharksRaw = requests.get(f"{API}/pois.geojson/")
     sharksJson = sharksRaw.json()
 
     sharks = []
@@ -44,6 +55,7 @@ def get_sharks() -> list[Shark]:
             sharks.append(
                 Shark(
                     properties["name"],
+                    properties["id"],
                     properties["species"],
                     (location[0], location[1])
                 ))
@@ -51,31 +63,23 @@ def get_sharks() -> list[Shark]:
     return sharks
 
 
-def get_travel_log(shark_name: str):
-    pass
+def get_travel_log(shark: Shark):
+    travel = requests.get(f"{API}/pois/{shark.id}/motion/with-meta/").json()
 
+    spots = []
+    for spot in travel["motion"]:
+        coordinates = spot["point"]["coordinates"]
+        spots.append((coordinates[0], coordinates[1]))
 
-def get_elevation(lat: float, long: float) -> float:
-    elevationJSON = requests.get(
-        f"https://api.open-meteo.com/v1/elevation?latitude={lat}&longitude={long}"
-    ).json()
-
-    return elevationJSON["elevation"][0]
+    log = TravelLog(spots)
+    return log
 
 
 def main():
     sharks = get_sharks()
-
-    species = {}
-
-    for shark in sharks:
-        if shark.species in species:
-            species[shark.species] += 1
-        else:
-            species[shark.species] = 1
-
-    for specie in species.keys():
-        print(specie)
+    log = get_travel_log(sharks[1])
+    print("no")
+    print(log.locations)
 
 
 if __name__ == "__main__":
