@@ -19,7 +19,7 @@ import { ImageOverlay } from "react-leaflet";
 import { LatLngBounds } from "leaflet";
 
 const sharkIcon = new Icon({
-  iconUrl: "/shark.webp",
+  iconUrl: "/static/shark.webp",
   iconSize: [32, 32],
   iconAnchor: [16, 16],
   popupAnchor: [0, -16],
@@ -119,7 +119,7 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
       {/* Phytoplankton Image Overlay */}
       {layers.ppo.enabled && (
         <ImageOverlay
-          url="/public/Phytoplankton.png"
+          url="/static/Phytoplankton.png"
           bounds={
             new LatLngBounds([
               [-90, -180],
@@ -133,7 +133,7 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
       {/* Depth Image Overlay */}
       {layers.depth.enabled && (
         <ImageOverlay
-          url="/public/depth.png"
+          url="/static/depth.png"
           bounds={
             new LatLngBounds([
               [-180, -180],
