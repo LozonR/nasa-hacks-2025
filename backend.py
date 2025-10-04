@@ -7,7 +7,7 @@ isDay = True
 currentShark = 0
 
 class Shark:
-    def __init__(self, type, mode, prev_mode, modeSwitch, latitude, longitude, direction, depth, vert_vel, name, predicted_lat, predicted_long, prev_depth=None, px_x=0, px_y=0):
+    def __init__(self, type, mode, prev_mode, modeSwitch, latitude, longitude, direction, depth, vert_vel, name, predicted_lat, predicted_long, pitch=135, prev_depth=None, px_x=0, px_y=0):
         self.latitude = latitude
         self.longitude = longitude
         self.type = type
@@ -38,20 +38,19 @@ def pxToCoords(px_x, px_y):
 def currentDepthOcean(latitude, longitude):
     return None
 
-while True:
+def updateSharks():
     shark = sharks[currentShark]
 
     vv = (shark.depth - shark.prev_depth)/60
 
+    speed = vv / numpy.sin(shark.pitch)
 
-    if mode == "sleeping":
+    if shark.mode == "sleeping":
         if isDay:
             shark.mode = shark.prev_mode
         else:
             shark.predicted_lat = shark.latitude
             shark.predicted_long = shark.longitude
-            time.sleep(60)
-            continue
 
     if shark.type == "great white":
         if shark.mode == "scavenging":
