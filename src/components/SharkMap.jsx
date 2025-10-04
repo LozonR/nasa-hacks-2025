@@ -64,8 +64,8 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
     },
     depth: {
       name: "Depth Overlay",
-      enabled: false
-    }
+      enabled: false,
+    },
   });
 
   const [selectedSharkId, setSelectedSharkId] = useState(null);
@@ -97,6 +97,18 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
       {/* Phytoplankton Image Overlay */}
       <ImageOverlay
         url="/public/Phytoplankton.png"
+        bounds={
+          new LatLngBounds([
+            [-70, -180],
+            [70, 180],
+          ])
+        }
+        opacity={0.5}
+      />
+
+      {/* Depth Image Overlay */}
+      <ImageOverlay
+        url="/public/depth.png"
         bounds={
           new LatLngBounds([
             [-70, -180],
