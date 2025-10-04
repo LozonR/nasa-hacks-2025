@@ -86,8 +86,9 @@ def get_travel_log(shark: Shark):
 def main():
     sharks = get_sharks()
     log = get_travel_log(sharks[1])
-    print("no")
-    print(log.locations)
+    print("travel log")
+    for spot in log.locations:
+        print(f"\t{spot.date} at {spot.lat} {spot.long}")
 
 
 if __name__ == "__main__":
