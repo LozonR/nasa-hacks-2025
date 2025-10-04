@@ -1,6 +1,8 @@
-<<<<<<< HEAD
-= NASA Hacks 2025
-=======
 # DAN AHHHHHH
 
->>>>>>> origin/dan-test
+To set up
+```
+npm install
+pip install -r requirements.txt
+```
+
