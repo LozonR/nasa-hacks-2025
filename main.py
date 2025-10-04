@@ -1,7 +1,12 @@
-from flask import Flask
+from flask import Flask, send_file
 import API.sharks
 
 app = Flask(__name__)
+
+
+@app.route("/")
+def index():
+    return send_file("static/index.html")
 
 
 @app.route("/api/sharks")
