@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -45,6 +45,8 @@ function MapController({ zoomToSharkRef }) {
 }
 
 function SharkMap({ onSharkSelect, zoomToSharkRef }) {
+  const [apiSharks, setApiSharks] = useState([]);
+  const [useApiData, setUseApiData] = useState(false);
   const [layers, setLayers] = useState({
     sharks: { name: "Shark Locations", enabled: true },
     foragingZones: { name: "Foraging Zones", enabled: true },
@@ -69,6 +71,56 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
   });
 
   const [selectedSharkId, setSelectedSharkId] = useState(null);
+
+  // Fetch sharks from API and trigger updates
+  useEffect(() => {
+    const fetchSharks = async () => {
+      try {
+        const response = await fetch('/api/sharks');
+        const data = await response.json();
+        if (data.success && data.sharks.length > 0) {
+          setApiSharks(data.sharks);
+          setUseApiData(true);
+        }
+      } catch (error) {
+        console.error('Error fetching sharks:', error);
+      }
+    };
+
+    const updateSharks = async () => {
+      try {
+        await fetch('/api/update', { method: 'POST' });
+        fetchSharks();
+      } catch (error) {
+        console.error('Error updating sharks:', error);
+      }
+    };
+
+    // Initial fetch
+    fetchSharks();
+
+    // Update every 5 seconds
+    const interval = setInterval(updateSharks, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Convert API sharks to display format
+  const displaySharks = useApiData
+    ? apiSharks.map((shark, idx) => ({
+        id: idx,
+        name: shark.name,
+        lat: shark.latitude,
+        lng: shark.longitude,
+        species: shark.type,
+        tagId: `SHARK-${idx}`,
+        lastUpdate: new Date().toLocaleString(),
+        foragingRadius: 50,
+        mode: shark.mode,
+        depth: shark.depth,
+        terminated: shark.terminated,
+      }))
+    : sampleSharks;
 
   const toggleLayer = (layerKey) => {
     setLayers((prev) => ({
@@ -153,7 +205,7 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
         ))}
 
       {/* Shark Markers and Foraging Zones */}
-      {sampleSharks.map((shark) => (
+      {displaySharks.filter(shark => !shark.terminated).map((shark) => (
         <div key={shark.id}>
           {layers.sharks.enabled && (
             <Marker
@@ -178,7 +230,13 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
                   <br />
                   Tag ID: {shark.tagId}
                   <br />
+                  Mode: {shark.mode}
+                  <br />
+                  Depth: {shark.depth}m
+                  <br />
                   Last Updated: {shark.lastUpdate}
+                  <br />
+                  {useApiData && <small style={{color: 'green'}}>Live API Data</small>}
                 </div>
               </Popup>
             </Marker>

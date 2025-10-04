@@ -11,7 +11,8 @@ function App() {
   const zoomToSharkRef = useRef(null);
 
   const handleRandomSharkZoom = () => {
-    const randomShark = sampleSharks[Math.floor(Math.random() * sampleSharks.length)];
+    const randomShark =
+      sampleSharks[Math.floor(Math.random() * sampleSharks.length)];
     if (zoomToSharkRef.current) {
       zoomToSharkRef.current(randomShark);
       setSelectedShark(randomShark);
@@ -24,7 +25,10 @@ function App() {
         return (
           <>
             <div className="map-container">
-              <SharkMap onSharkSelect={setSelectedShark} zoomToSharkRef={zoomToSharkRef} />
+              <SharkMap
+                onSharkSelect={setSelectedShark}
+                zoomToSharkRef={zoomToSharkRef}
+              />
             </div>
             <div className="sidebar">
               <Dashboard selectedShark={selectedShark} />
@@ -90,17 +94,22 @@ function App() {
             <h2>ℹ️ About This Project</h2>
             <p>NASA Hackathon 2025 - Sharks from Space</p>
             <p>
-              The goal of this project is to track and predict the movement of sharks
-              using satellite data to predict foraging habitats and understand marine ecosystems.
-              <br></br><br></br>
+              The goal of this project is to track and predict the movement of
+              sharks using satellite data to predict foraging habitats and
+              understand marine ecosystems.
+              <br></br>
+              <br></br>
               Team Leader, Merging - Kaitlyn Carbonaro<br></br>
               Front End - Dan Laurin, Jared Johnston<br></br>
               Back End - Chase MaClean, Riley Lozon<br></br>
               API - Liangyue Zhao
             </p>
-            <img src = "https://sh-4rk.carrd.co/assets/images/image01.png?v=5e18f3a1"/> 
+            <img src="https://sh-4rk.carrd.co/assets/images/image01.png?v=5e18f3a1" />
             <p>
-              We do not own any of the art used, <a href = "https://x.com/SH_4RK">credit to @SH4RK on twitter for the art.</a>
+              We do not own any of the art used,{" "}
+              <a href="https://x.com/SH_4RK">
+                credit to @SH4RK on twitter for the art.
+              </a>
             </p>
           </div>
         );

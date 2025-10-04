@@ -15,7 +15,9 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 # Initialize depth map on startup
-load_depth_map("/home/dlaurin/Code/nasa-hacks-2025/public/depth.png")
+import os
+depth_path = os.path.join(os.path.dirname(__file__), "../public/depth.png")
+load_depth_map(depth_path)
 
 @app.route('/api/sharks', methods=['GET'])
 def get_all_sharks():
