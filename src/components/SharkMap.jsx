@@ -12,7 +12,6 @@ import {
 } from "react-leaflet";
 import { Icon } from "leaflet";
 import { backendAPI } from "../services/api";
-import HeatmapLayer from "./HeatmapLayer";
 import LayerControls from "./LayerControls";
 import "./SharkMap.css";
 import { ImageOverlay } from "react-leaflet";
@@ -171,36 +170,6 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
           opacity={0.5}
         />
       )}
-
-      {/* Heatmap Layer */}
-      {layers.heatmap.enabled && <HeatmapLayer points={heatmapPoints} />}
-
-      {/* SST Zones */}
-      {layers.sst.enabled &&
-        sstZones.map((zone, idx) => (
-          <Rectangle
-            key={idx}
-            bounds={zone.bounds}
-            pathOptions={{
-              color: zone.color,
-              fillColor: zone.color,
-              fillOpacity: 0.15,
-              weight: 1,
-            }}
-          >
-            <Popup
-              eventHandlers={{
-                close: () => setSelectedSharkId(null),
-              }}
-            >
-              <div>
-                <strong>SST Zone</strong>
-                <br />
-                Temperature: {zone.temp}
-              </div>
-            </Popup>
-          </Rectangle>
-        ))}
 
       {/* Shark Markers */}
       {sharks.map((shark) => (
