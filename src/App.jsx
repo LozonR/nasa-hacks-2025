@@ -11,7 +11,7 @@ function App() {
   const zoomToSharkRef = useRef(null);
 
   const handleRandomSharkZoom = async () => {
-    const randomShark = await fetch('./api/sharks');
+    const randomShark = await fetch("./api/sharks");
     if (zoomToSharkRef.current) {
       zoomToSharkRef.current(randomShark);
       setSelectedShark(randomShark);
@@ -24,7 +24,10 @@ function App() {
         return (
           <>
             <div className="map-container">
-              <SharkMap onSharkSelect={setSelectedShark} zoomToSharkRef={zoomToSharkRef} />
+              <SharkMap
+                onSharkSelect={setSelectedShark}
+                zoomToSharkRef={zoomToSharkRef}
+              />
             </div>
             <div className="sidebar">
               <Dashboard selectedShark={selectedShark} />
@@ -37,19 +40,13 @@ function App() {
             <h2>🛰️ NASA Data Sources</h2>
             <ul className="data-source-list">
               <li>
-                <strong>MODIS Aqua/Terra</strong> - Ocean Color & SST
+                <strong>OCEARCH</strong> - Shark Locations
               </li>
               <li>
-                <strong>VIIRS</strong> - Chlorophyll-a Concentration
+                <strong>PACE</strong> - Phytoplankton Map
               </li>
               <li>
-                <strong>OSCAR</strong> - Ocean Surface Currents
-              </li>
-              <li>
-                <strong>GEBCO</strong> - Bathymetry Data
-              </li>
-              <li>
-                <strong>SeaWiFS</strong> - Primary Productivity
+                <strong>OPEN METEO</strong> - Depth Area Map
               </li>
             </ul>
           </div>
@@ -60,17 +57,22 @@ function App() {
             <h2>ℹ️ About This Project</h2>
             <p>NASA Hackathon 2025 - Sharks from Space</p>
             <p>
-              The goal of this project is to track and predict the movement of sharks
-              using satellite data to predict foraging habitats and understand marine ecosystems.
-              <br></br><br></br>
+              The goal of this project is to track and predict the movement of
+              sharks using satellite data to predict foraging habitats and
+              understand marine ecosystems.
+              <br></br>
+              <br></br>
               Team Leader, Merging - Kaitlyn Carbonaro<br></br>
               Front End - Dan Laurin, Jared Johnston<br></br>
               Back End - Chase MaClean, Riley Lozon<br></br>
               API - Liangyue Zhao
             </p>
-            <img src = "/static/sh4rk.png"/> 
+            <img src="/static/sh4rk.png" />
             <p>
-              We do not own any of the art used, <a href = "https://x.com/SH_4RK">credit to @SH4RK on twitter for the art.</a>
+              We do not own any of the art used,{" "}
+              <a href="https://x.com/SH_4RK">
+                credit to @SH4RK on twitter for the art.
+              </a>
             </p>
           </div>
         );
