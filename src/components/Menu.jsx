@@ -65,12 +65,8 @@ function Menu({ onViewChange, currentView, onRandomSharkZoom }) {
         <div className="menu-footer">
           <div className="menu-stats">
             <div className="stat">
-              <span className="stat-value">4</span>
-              <span className="stat-label">Active Tags</span>
-            </div>
-            <div className="stat">
-              <span className="stat-value">2.3k</span>
-              <span className="stat-label">Data Points</span>
+              <span className="stat-value">310</span>
+              <span className="stat-label">Sharks Tracked</span>
             </div>
           </div>
         </div>

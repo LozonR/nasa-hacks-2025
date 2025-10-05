@@ -80,18 +80,8 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
   const [layers, setLayers] = useState({
     sharks: { name: "Shark Locations", enabled: true },
     foragingZones: { name: "Foraging Zones", enabled: true },
-    heatmap: {
-      name: "Foraging Probability Heatmap",
-      enabled: false,
-      legend: "Blue (low) → Red (high)",
-    },
-    sst: {
-      name: "Sea Surface Temperature",
-      enabled: false,
-      legend: "Ocean temp zones",
-    },
     ppo: {
-      name: "Photoplankton Overlay",
+      name: "Phytoplankton Overlay",
       enabled: false,
     },
     depth: {
@@ -166,37 +156,7 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
         />
       )}
 
-      {/* Heatmap Layer */}
-      {layers.heatmap.enabled && <HeatmapLayer points={heatmapPoints} />}
-
-      {/* SST Zones */}
-      {layers.sst.enabled &&
-        sstZones.map((zone, idx) => (
-          <Rectangle
-            key={idx}
-            bounds={zone.bounds}
-            pathOptions={{
-              color: zone.color,
-              fillColor: zone.color,
-              fillOpacity: 0.15,
-              weight: 1,
-            }}
-          >
-            <Popup
-              eventHandlers={{
-                close: () => setSelectedSharkId(null),
-              }}
-            >
-              <div>
-                <strong>SST Zone</strong>
-                <br />
-                Temperature: {zone.temp}
-              </div>
-            </Popup>
-          </Rectangle>
-        ))}
-
-      {/* Shark Markers and Foraging Zones */}
+      {/* Shark Markers */}
       {sharks.map((shark) => (
         <div key={shark.id}>
           {layers.sharks.enabled && (
@@ -222,20 +182,6 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
                 </div>
               </Popup>
             </Marker>
-          )}
-
-          {false && layers.foragingZones.enabled && (
-            <Circle
-              center={[shark.lat, shark.lng]}
-              radius={shark.foragingRadius * 1000}
-              pathOptions={{
-                color: "#ffeb3b",
-                fillColor: "#ffeb3b",
-                fillOpacity: 0.1,
-                weight: 2,
-                dashArray: "5, 5",
-              }}
-            />
           )}
         </div>
       ))}
