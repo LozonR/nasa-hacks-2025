@@ -33,6 +33,7 @@ function MapMoveListener({ onMove }) {
     const center = map.getCenter();
     const bounds = map.getBounds().getCenter();
     let wrappedLng = center.lng;
+    let wrappedLat = center.lat;
     let wrapped = false;
     if (center.lng > 180) {
       wrappedLng = center.lng - 359;
@@ -42,10 +43,18 @@ function MapMoveListener({ onMove }) {
       wrapped = true;
     } 
 
+    if (center.lat > 90) {
+      wrappedLat = bounds.lat + 90;
+    } else if (center.lat < -90) {
+      wrappedLat = bounds.lat - 90;
+    }
+
+
     if (wrapped) {
-      map.setView([bounds.lat, wrappedLng], map.getZoom(), { animate: false});
-    } else {
-      map.setView([bounds.lat, center.lng], map.getZoom(), { animate: false});
+      map.setView([wrappedLat, wrappedLng], map.getZoom(), { animate: false});
+    } 
+    else {
+      map.setView([wrappedLat, center.lng], map.getZoom(), { animate: false});
     }
 
 
