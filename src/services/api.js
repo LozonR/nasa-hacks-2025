@@ -36,13 +36,9 @@ export const nasaAPI = {
 export const backendAPI = {
   // Get all shark tracking data
   getSharks: async () => {
-    try {
-      const response = await axios.get(`${BACKEND_API}/sharks`);
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching sharks:", error);
-      return [];
-    }
+        let response = await fetch("/api/sharks")
+        let sharks = await response.json()
+        return sharks
   },
 
   // Get shark by ID
