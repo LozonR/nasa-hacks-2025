@@ -76,11 +76,6 @@ function MapController({ zoomToSharkRef }) {
 function SharkMap({ onSharkSelect, zoomToSharkRef }) {
   const [layers, setLayers] = useState({
     sharks: { name: "Shark Locations", enabled: true },
-    heatmap: {
-      name: "Foraging Probability Heatmap",
-      enabled: false,
-      legend: "Blue (low) → Red (high)",
-    },
     sst: {
       name: "Sea Surface Temperature",
       enabled: false,

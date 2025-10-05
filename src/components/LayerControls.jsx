@@ -1,4 +1,4 @@
-import './LayerControls.css'
+import "./LayerControls.css";
 
 function LayerControls({ layers, onToggle }) {
   return (
@@ -18,16 +18,12 @@ function LayerControls({ layers, onToggle }) {
               />
               <span className="layer-name">{layer.name}</span>
             </label>
-            {layer.legend && (
-              <div className="layer-legend">
-                {layer.legend}
-              </div>
-            )}
+            {layer.legend && <div className="layer-legend">{layer.legend}</div>}
           </div>
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-export default LayerControls
+export default LayerControls;
