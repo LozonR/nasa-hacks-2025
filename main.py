@@ -77,16 +77,16 @@ def get_shark_details(shark_id: int):
 
     shark: None | Shark = None
 
-    for shark in sharksRawJSON["features"]:
-        properties = shark["properties"]
-        location = shark["geometry"]["coordinates"]
+    for currentShark in sharksRawJSON["features"]:
+        properties = currentShark["properties"]
+        location = currentShark["geometry"]["coordinates"]
 
         if properties["species"] in SHARK_CATEGORIES and properties["id"] == shark_id:
             shark = Shark(properties["name"], properties["id"], properties["species"], [
                           location[0], location[1]])
+            sharkPredict.updateShark(shark)
 
-    if shark is not None:
-        sharkPredict.updateShark(shark)
+    if currentShark is not None:
         return shark.__dict__
 
 
