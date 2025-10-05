@@ -29,12 +29,29 @@ class Shark:
             name: str,
             id: int,
             species: str,
-            location: (float, float)
+            location: tuple[float, float],
+            prev_location: tuple[float, float],
+            predicted_location: tuple[float, float],
+            mode: str,
+            prev_mode: str,
+            prev_mode_time: int,
+            depth: float,
+            prev_depth: float,
+            px_x: int = 0,
+            px_y: int = 0,
+            facing: tuple[int, int] = (0, 0),
+            
     ):
         self.name = name
         self.id = id
         self.species = species
         self.location = location
+        self.predicted_location = predicted_location
+        self.mode = mode
+        self.prev_mode = prev_mode
+        self.prev_mode_time = time.time()
+        self.depth = depth
+        self.prev_depth = depth
 
 
 class TravelSpot:

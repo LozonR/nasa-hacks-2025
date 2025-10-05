@@ -1,31 +1,13 @@
-from API/sharks import Shark
+from main import Shark
 
 import time
 import numpy
+from PIL import Image
 from random import randint
 
 sharks = []
 isDay = True
 currentShark = 0
-
-class Shark:
-    def __init__(self, type, mode, prev_mode, modeSwitch, latitude, longitude, direction, depth, vert_vel, name, predicted_lat, predicted_long, pitch=135, prev_depth=None, px_x=0, px_y=0):
-        self.latitude = latitude
-        self.longitude = longitude
-        self.type = type
-        self.mode = mode
-        self.prev_mode = None
-        self.direction = direction
-        self.modeSwitch = time.time()
-        self.px_x = coordsToPx(latitude, longitude)[1]
-        self.px_y = coordsToPx(latitude, longitude)[0]
-        self.name = name
-        self.depth = randint(1, currentDepthOcean(latitude, longitude) - 1)
-
-        sharks.append(self)
-
-    def whereGoing(self):
-        ""
 
 def coordsToPx(latitude, longitude):
     px_x = 24*longitude
@@ -47,23 +29,108 @@ def updateSharks():
 
     speed = vv / numpy.sin(shark.pitch)
 
+    shark.facing = [shark.px_x - coordsToPx(shark.prev_location[0], shark.prev_location[1])[0], shark.px_y - coordsToPx(shark.prev_location[0], shark.prev_location[1])[1]]
+    shark.facing = shark.facing / numpy.linalg.norm(shark.facing)
+
+
     if shark.mode == "sleeping":
         if isDay:
             shark.mode = shark.prev_mode
         else:
-            shark.predicted_lat = shark.latitude
-            shark.predicted_long = shark.longitude
+            shark.predicted_location[0] = shark.location[0]
+            shark.predicted_location[1] = shark.location[1]
 
     if shark.type == "great white":
         if shark.mode == "scavenging":
             if isDay:
-                # scavenge
+                
                 pass
             else:
-                shark.predicted_lat = shark.latitude
-                shark.predicted_long = shark.longitude
+                shark.predicted_location[0] = shark.location[0]
+                shark.predicted_location[1] = shark.location[1]
                 shark.prev_mode = shark.mode
                 shark.mode = "sleeping"
         elif shark.mode == "transiting":
             
             pass
+
+
+def scavenging(shark: Shark):
+    if comparePixel(shark.px_x + shark.facing[0], shark.px_y + shark.facing[1]) != -999:
+        shark.predicted_location[1] = pxToCoords(shark.px_x + shark.facing[0], shark.px_y + shark.facing[1])[1]
+        shark.predicted_location[0] = pxToCoords(shark.px_x + shark.facing[0], shark.px_y + shark.facing[1])[0]
+    else:
+        scan = scanSquare(shark.px_x, shark.px_y)
+        maxIndex = scan.index(max(scan))
+        if maxIndex == 0:
+            shark.predicted_location[1] = (1/shark.speed)*pxToCoords(shark.px_x - 1, shark.px_y - 1)[1]
+            shark.predicted_location[0] = (1/shark.speed)*pxToCoords(shark.px_x - 1, shark.px_y - 1)[0]
+        elif maxIndex == 1:
+            shark.predicted_location[1] = (1/shark.speed)*pxToCoords(shark.px_x, shark.px_y - 1)[1]
+            shark.predicted_location[0] = (1/shark.speed)*pxToCoords(shark.px_x, shark.px_y - 1)[0]
+        elif maxIndex == 2:
+            shark.predicted_location[1] = (1/shark.speed)*pxToCoords(shark.px_x + 1, shark.px_y - 1)[1]
+            shark.predicted_location[0] = (1/shark.speed)*pxToCoords(shark.px_x + 1, shark.px_y - 1)[0]
+        elif maxIndex == 3:
+            shark.predicted_location[1] = (1/shark.speed)*pxToCoords(shark.px_x - 1, shark.px_y)[1]
+            shark.predicted_location[0] = (1/shark.speed)*pxToCoords(shark.px_x - 1, shark.px_y)[0]
+        elif maxIndex == 4:
+            shark.predicted_location[1] = (1/shark.speed)*pxToCoords(shark.px_x + 1, shark.px_y)[1]
+            shark.predicted_location[0] = (1/shark.speed)*pxToCoords(shark.px_x + 1, shark.px_y)[0]
+        elif maxIndex == 5:
+            shark.predicted_location[1] = (1/shark.speed)*pxToCoords(shark.px_x - 1, shark.px_y + 1)[1]
+            shark.predicted_location[0] = (1/shark.speed)*pxToCoords(shark.px_x - 1, shark.px_y + 1)[0]
+        elif maxIndex == 6:
+            shark.predicted_location[1] = (1/shark.speed)*pxToCoords(shark.px_x, shark.px_y + 1)[1]
+            shark.predicted_location[0] = (1/shark.speed)*pxToCoords(shark.px_x, shark.px_y + 1)[0]
+        elif maxIndex == 7:
+            shark.predicted_location[1] = (1/shark.speed)*pxToCoords(shark.px_x + 1, shark.px_y + 1)[1]
+            shark.predicted_location[0] = (1/shark.speed)*pxToCoords(shark.px_x + 1, shark.px_y + 1)[0]
+        else:
+            shark.predicted_location[1] = (1/shark.speed)*pxToCoords(shark.px_x + randint(-1, 1), shark.px_y + randint(-1, 1))[1]
+            shark.predicted_location[0] = (1/shark.speed)*pxToCoords(shark.px_x + randint(-1, 1), shark.px_y + randint(-1, 1))[0]
+    
+    if SHARK_CATEGORIES[shark.species] == 1:
+        if time.time() - shark.prev_mode_time > 604800: # 1 week
+            shark.prev_mode = shark.mode
+            shark.mode = "transiting"
+            shark.prev_mode_time = time.time()
+    else:
+        if time.time() - shark.prev_mode_time > 259200: # 3 days
+            shark.prev_mode = shark.mode
+            shark.mode = "transiting"
+            shark.prev_mode_time = time.time()
+
+    return (shark.predicted_location[0], shark.predicted_location[1])
+
+
+def scanSquare(px_x, px_y):
+    return [comparePixel(px_x - 1, px_y - 1), 
+            comparePixel(px_x, px_y - 1), 
+            comparePixel(px_x + 1, px_y - 1), 
+            comparePixel(px_x - 1, px_y), 
+            comparePixel(px_x + 1, px_y), 
+            comparePixel(px_x - 1, px_y + 1), 
+            comparePixel(px_x, px_y + 1), 
+            comparePixel(px_x + 1, px_y + 1)]
+
+def comparePixel(px_x, px_y):
+    phytoplankton_img = Image.open("public/phytoplankton.png") #path to phytoplankton image
+    depth_img = Image.open("public/depth.png") #path to depth image
+
+    phyto_color = phytoplankton_img.getpixel((px_x, px_y))
+    depth_color = depth_img.getpixel((px_x, px_y))
+    if depth_color == (0, 0, 0):
+        return -999
+    
+    red = phyto_color[0]
+    green = phyto_color[1]
+    blue = phyto_color[2]
+
+    if max(red, green, blue) == blue:
+        return 0.01
+    elif max(red, green, blue) == green:
+        return 0.1
+    elif max(red, green, blue) == red:
+        return 1
+    
