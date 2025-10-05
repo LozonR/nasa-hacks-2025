@@ -33,7 +33,7 @@ def get_previous_location(shark_id: int):
     time = previous_spot["dt_move"]
     prev_location = TravelSpot(coordinates[0], coordinates[1], time)
 
-    return prev_location.__dict__
+    return prev_location
 
 
 def updateShark(shark: Shark):
@@ -48,7 +48,8 @@ def updateShark(shark: Shark):
     if shark.prev_depth is None:
         shark.prev_depth = 0
 
-    shark.prev_location = (get_previous_location(shark.id).lat, get_previous_location(shark.id).long)
+    prev_location = get_previous_location(shark.id)
+    shark.prev_location = [prev_location.lat, prev_location.long]
 
     shark.facing = [
         shark.px_x -
@@ -214,7 +215,7 @@ def scanSquare(px_x, px_y):
 
 def comparePixel(px_x, px_y):
     # path to phytoplankton image
-    phytoplankton_img = Image.open("public/phytoplankton.png")
+    phytoplankton_img = Image.open("public/Phytoplankton.png")
     depth_img = Image.open("Backend/depth.png")  # path to depth image
 
     phyto_color = phytoplankton_img.getpixel((px_x, px_y))
