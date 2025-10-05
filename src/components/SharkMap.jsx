@@ -33,22 +33,25 @@ function MapMoveListener({ onMove }) {
     const center = map.getCenter();
     const bounds = map.getBounds().getCenter();
     let wrappedLng = center.lng;
+    let wrappedLat = center.lat;
     let wrapped = false;
     if (center.lng > 180) {
-      wrappedLng = center.lng - 359;
-      wrapped = true;
+      wrappedLng = center.lng - 360;
     } else if (center.lng < -180) {
-      wrappedLng = center.lng + 359;
-      wrapped = true;
+      wrappedLng = center.lng + 360;
+    } 
+
+    if (center.lat > 90) {
+      wrappedLat = bounds.lat + 90;
+    } else if (center.lat < -90) {
+      wrappedLat = bounds.lat - 90;
     }
 
-    if (wrapped) {
-      map.setView([bounds.lat, wrappedLng], map.getZoom(), { animate: false });
-    } else {
-      map.setView([bounds.lat, center.lng], map.getZoom(), { animate: false });
-    }
 
-    onMove({ lat: center.lat, lng: wrappedLng });
+
+    map.setView([wrappedLat, wrappedLng], map.getZoom(), { animate: false });
+
+    onMove({ lat: wrappedLat, lng: wrappedLng });
   });
   return null;
 }
