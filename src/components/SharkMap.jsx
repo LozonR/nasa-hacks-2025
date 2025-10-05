@@ -57,7 +57,7 @@ function MapController({ zoomToSharkRef }) {
   const map = useMap();
 
   zoomToSharkRef.current = (shark) => {
-    map.setView([shark.lat, shark.lng], 8, {
+    map.setView([shark.location[1], shark.location[0]], 8, {
       animate: true,
       duration: 1,
     });
@@ -192,7 +192,7 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
         <div key={shark.id}>
           {layers.sharks.enabled && (
             <Marker
-              position={shark.location}
+              position={[ shark.location[1], shark.location[0] ]}
               icon={selectedSharkId === shark.id ? sharkIconLarge : sharkIcon}
               eventHandlers={{
                 click: () => {

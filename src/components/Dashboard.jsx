@@ -21,19 +21,19 @@ function Dashboard({ selectedShark }) {
         </div>
         <div className="detail-item">
           <span className="label">Tag ID:</span>
-          <span className="value">{selectedShark.tagId}</span>
+          <span className="value">{selectedShark.id}</span>
         </div>
         <div className="detail-item">
           <span className="label">Position:</span>
-          <span className="value">{selectedShark.lat.toFixed(4)}°, {selectedShark.lng.toFixed(4)}°</span>
+          <span className="value">{selectedShark.location[1].toFixed(4)}°, {selectedShark.location[0].toFixed(4)}°</span>
         </div>
-        <div className="detail-item">
+        { /* <div className="detail-item">
           <span className="label">Last Update:</span>
           <span className="value">{selectedShark.lastUpdate}</span>
-        </div>
+        </div> */ }
       </div>
 
-      <div className="environmental-data">
+      { /*<div className="environmental-data">
         <h3>Environmental Conditions</h3>
         <div className="env-grid">
           <div className="env-card">
@@ -53,7 +53,7 @@ function Dashboard({ selectedShark }) {
             <div className="env-value">{selectedShark.foragingProb}%</div>
           </div>
         </div>
-      </div>
+      </div> */ }
     </div>
   )
 }
