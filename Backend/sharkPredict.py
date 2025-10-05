@@ -44,19 +44,46 @@ def updateShark(uid: int):
             shark.predicted_location[0] = shark.location[0]
             shark.predicted_location[1] = shark.location[1]
 
-    if shark.type == "great white":
-        if shark.mode == "scavenging":
+    if shark.mode == "scavenging":
+        if SHARK_CATEGORIES[shark.species] == 1:
             if isDay:
-                
+                scavenging(shark)
                 pass
             else:
                 shark.predicted_location[0] = shark.location[0]
                 shark.predicted_location[1] = shark.location[1]
                 shark.prev_mode = shark.mode
                 shark.mode = "sleeping"
-        elif shark.mode == "transiting":
-            
-            pass
+        elif SHARK_CATEGORIES[shark.species] == 0:
+            if not isDay:
+                scavenging(shark)
+                pass
+            else:
+                shark.predicted_location[0] = shark.location[0]
+                shark.predicted_location[1] = shark.location[1]
+                shark.prev_mode = shark.mode
+                shark.mode = "sleeping"
+    elif shark.mode == "transiting":
+        if SHARK_CATEGORIES[shark.species] == 1:
+            if isDay:
+                transiting(shark)
+                pass
+            else:
+                shark.predicted_location[0] = shark.location[0]
+                shark.predicted_location[1] = shark.location[1]
+                shark.prev_mode = shark.mode
+                shark.mode = "sleeping"
+        elif SHARK_CATEGORIES[shark.species] == 0:
+            if not isDay:
+                transiting(shark)
+                pass
+            else:
+                shark.predicted_location[0] = shark.location[0]
+                shark.predicted_location[1] = shark.location[1]
+                shark.prev_mode = shark.mode
+                shark.mode = "sleeping"
+    else:
+        pass
 
 
 def scavenging(shark: Shark):
