@@ -29,6 +29,9 @@ def updateShark(uid: int):
             shark = s
             break
 
+    shark.prev_depth = shark.depth
+    shark.depth = calcDepth(shark.px_x, shark.px_y)/2
+
     vv = (shark.depth - shark.prev_depth)/60
 
     speed = vv / numpy.sin(shark.pitch)
@@ -186,7 +189,7 @@ def scanSquare(px_x, px_y):
 
 def comparePixel(px_x, px_y):
     phytoplankton_img = Image.open("public/phytoplankton.png") #path to phytoplankton image
-    depth_img = Image.open("public/depth.png") #path to depth image
+    depth_img = Image.open("backend/depth.png") #path to depth image
 
     phyto_color = phytoplankton_img.getpixel((px_x, px_y))
     depth_color = depth_img.getpixel((px_x, px_y))
@@ -205,7 +208,7 @@ def comparePixel(px_x, px_y):
         return 1
     
 def calcDepth(px_x, px_y):
-    depth_img = Image.open("public/depth.png") #path to depth image
+    depth_img = Image.open("backend/depth.png") #path to depth image
     depth_color = depth_img.getpixel((px_x, px_y))
     
     red = depth_color[0]
