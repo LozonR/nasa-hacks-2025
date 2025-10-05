@@ -31,6 +31,7 @@ function Dashboard({ selectedShark }) {
           </span>
         </div>
       </div>
+      <img id = "sharky" src = "/static/sharkyboy.png"></img>
     </div>
   );
 }
