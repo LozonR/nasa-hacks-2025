@@ -96,7 +96,10 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
 
     useEffect(() => {
         const fun = async () => {
-            setSharks(await backendAPI.getSharks())
+            const data = await backendAPI.getSharks()
+            console.log(data)
+            setSharks(data)
+
         }
         
         fun()
