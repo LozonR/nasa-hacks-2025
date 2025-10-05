@@ -27,9 +27,11 @@ const sharkIcon = new Icon({
 
 function MapMoveListener({ onMove }) {
   const map = useMap();
+  // lock the map tops and bottoms so that it doesn't go out of bounds
 
   useMapEvent("moveend", () => {
     const center = map.getCenter();
+    const bounds = map.getBounds().getCenter();
     let wrappedLng = center.lng;
     let wrapped = false;
     if (center.lng > 180) {
@@ -38,11 +40,20 @@ function MapMoveListener({ onMove }) {
     } else if (center.lng < -180) {
       wrappedLng = center.lng + 359;
       wrapped = true;
-    }
+    } 
+
 
     if (wrapped) {
-      map.setView([center.lat, wrappedLng], map.getZoom(), { animate: false});
+      map.setView([bounds.lat, wrappedLng], map.getZoom(), { animate: false});
+    } else if (map.getZoom() > 7) {
+      map.setView([bounds.lat, center.lng], 7, { animate: false});
+    } else {
+      map.setView([bounds.lat, center.lng], map.getZoom(), { animate: false});
     }
+
+
+    
+
     onMove({ lat: center.lat, lng: wrappedLng });
   });
   return null;
@@ -61,7 +72,7 @@ function MapController({ zoomToSharkRef }) {
   const map = useMap();
 
   zoomToSharkRef.current = (shark) => {
-    map.setView([shark.location[1], shark.location[0]], 8, {
+    map.setView([shark.location[1], shark.location[0]], 7, {
       animate: true,
       duration: 1,
     });
