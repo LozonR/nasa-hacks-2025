@@ -32,9 +32,12 @@ def updateShark(shark: Shark):
     shark.prev_depth = shark.depth
     shark.depth = (max(12.5, calcDepth(shark.px_x, shark.px_y)/2) if SHARK_CATEGORIES[shark.species] == 0 else max(50, calcDepth(shark.px_x, shark.px_y))) if shark.depth == None else calcSharkDepth(shark)
 
-    vv = (shark.depth - shark.prev_depth)/60
+    if shark.depth is None:
+        shark.depth = 0
+    if shark.prev_depth is None:
+        shark.prev_depth = 0
 
-    speed = vv / numpy.sin(shark.pitch)
+    vv = (shark.depth - shark.prev_depth)/60
 
     shark.facing = [
         shark.px_x -
@@ -42,6 +45,7 @@ def updateShark(shark: Shark):
         shark.px_y -
         coordsToPx(shark.prev_location[0], shark.prev_location[1])[1]
     ]
+
     shark.facing = shark.facing / numpy.linalg.norm(shark.facing)
 
     if shark.mode == "sleeping":
@@ -235,7 +239,7 @@ def scanSquare(px_x, px_y):
 def comparePixel(px_x, px_y):
     # path to phytoplankton image
     phytoplankton_img = Image.open("public/phytoplankton.png")
-    depth_img = Image.open("backend/depth.png")  # path to depth image
+    depth_img = Image.open("Backend/depth.png")  # path to depth image
 
     phyto_color = phytoplankton_img.getpixel((px_x, px_y))
     depth_color = depth_img.getpixel((px_x, px_y))
@@ -255,7 +259,7 @@ def comparePixel(px_x, px_y):
 
 
 def calcDepth(px_x, px_y):
-    depth_img = Image.open("backend/depth.png")  # path to depth image
+    depth_img = Image.open("Backend/depth.png")  # path to depth image
     depth_color = depth_img.getpixel((px_x, px_y))
 
     red = depth_color[0]

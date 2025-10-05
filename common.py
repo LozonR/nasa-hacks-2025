@@ -48,6 +48,15 @@ class Shark:
         self.prev_mode_time = time.time()
         self.depth = depth
         self.prev_depth = depth
+        self.predicted_depth = predicted_depth
+        self.px_x = px_x
+        self.px_y = px_y
+        self.facing = facing
+        self.prev_location = prev_location
+        self.initial_time_depth = initial_time_depth
+        self.depth_mode = depth_mode
+        self.prev_mode_time = prev_mode_time
+        self.prev_depth = prev_depth
 
 
 class TravelSpot:
