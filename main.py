@@ -71,6 +71,26 @@ def get_random_shark():
     return random.choice(sharksJSON)
 
 
+@app.route("/api/sharks/details/<int:shark_id>")
+def get_shark_details(shark_id: int):
+    sharksRaw = requests.get(f"{API}/pois.geojson/")
+    sharksRawJSON = sharksRaw.json()
+
+    shark: None | Shark = None
+
+    for shark in sharksRawJSON["features"]:
+        properties = shark["properties"]
+        location = shark["geometry"]["coordinates"]
+
+        if properties["species"] in SHARK_CATEGORIES and properties["id"] == shark_id:
+            shark = Shark(properties["name"], properties["id"], properties["species"], [
+                          location[0], location[1]])
+
+    if shark is not None:
+        sharkPredict.updateShark(shark)
+        return shark.__dict__
+
+
 @app.route("/api/sharks/journey/<int:shark_id>")
 def get_shark_journey(shark_id: int):
     travel = requests.get(f"{API}/pois/{shark_id}/motion/with-meta/").json()
