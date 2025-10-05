@@ -28,11 +28,15 @@ class Shark:
             mode: str = "",
             prev_mode: str = "",
             prev_mode_time: int = 0,
-            depth: float = 0.0,
-            prev_depth: float = 0.0,
+            depth: float =0.0,
+            prev_depth: float =0.0,
+            predicted_depth: float = 0.0,
             px_x: int = 0,
             px_y: int = 0,
             facing: tuple[int, int] = (0, 0),
+            initial_time_depth: int = 0,
+            depth_mode: str = "sinning"
+            
     ):
         self.name = name
         self.id = id
