@@ -74,7 +74,7 @@ def get_sharks():
     for shark in sharks:
         sharksJSON.append(shark.__dict__)
 
-    return random.choice(sharksJSON)
+    return sharksJSON
 
 
 @app.route("/api/sharks/random")
@@ -102,7 +102,7 @@ def get_random_shark():
     for shark in sharks:
         sharksJSON.append(shark.__dict__)
 
-    return sharksJSON
+    return random.choice(sharksJSON)
 
 
 @app.route("/api/sharks/journey/<int:shark_id>")
