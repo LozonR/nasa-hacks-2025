@@ -1,10 +1,10 @@
-from common import Shark, SHARK_CATEGORIES
-from main import get_previous_location
+from common import Shark, SHARK_CATEGORIES, TravelSpot, API
 
 import time
 import numpy
 from PIL import Image
 from random import randint
+import requests
 
 isDay = True
 currentShark = 0
@@ -20,6 +20,20 @@ def pxToCoords(px_x, px_y):
     latitude = px_y/24
     longitude = px_x/24
     return [latitude, longitude]
+
+
+def get_previous_location(shark_id: int):
+    travel = requests.get(f"{API}/pois/{shark_id}/motion/with-meta/").json()
+
+    if len(travel["motion"]) < 2:
+        return {"error": "Not enough data"}
+
+    previous_spot = travel["motion"][-2]
+    coordinates = previous_spot["point"]["coordinates"]
+    time = previous_spot["dt_move"]
+    prev_location = TravelSpot(coordinates[0], coordinates[1], time)
+
+    return prev_location.__dict__
 
 
 def updateShark(shark: Shark):

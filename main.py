@@ -1,13 +1,12 @@
 from flask import Flask, send_file
 import requests
 import random
-from common import Shark, SHARK_CATEGORIES, TravelSpot
+from common import Shark, SHARK_CATEGORIES, TravelSpot, API
 from Backend import sharkPredict
 
 app = Flask(__name__)
 
 # API = "https://www.mapotic.com/api/v1/maps/3413/pois.geojson/"
-API = "https://www.mapotic.com/api/v1/maps/3413"
 
 
 @app.route("/")
@@ -33,7 +32,7 @@ def get_sharks():
                 properties["species"],
                 (location[0], location[1])
             )
-            # sharkPredict.updateShark(shark)
+            sharkPredict.updateShark(shark)
             sharks.append(shark)
 
     sharksJSON = []
@@ -83,18 +82,3 @@ def get_shark_journey(shark_id: int):
         locations.append(TravelSpot(coordinates[0], coordinates[1], time))
 
     return locations
-
-
-@app.route("/api/sharks/previous/<int:shark_id>")
-def get_previous_location(shark_id: int):
-    travel = requests.get(f"{API}/pois/{shark_id}/motion/with-meta/").json()
-
-    if len(travel["motion"]) < 2:
-        return {"error": "Not enough data"}
-
-    previous_spot = travel["motion"][-2]
-    coordinates = previous_spot["point"]["coordinates"]
-    time = previous_spot["dt_move"]
-    prev_location = TravelSpot(coordinates[0], coordinates[1], time)
-
-    return prev_location

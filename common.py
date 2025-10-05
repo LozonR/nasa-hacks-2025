@@ -1,5 +1,7 @@
 import time
 
+API = "https://www.mapotic.com/api/v1/maps/3413"
+
 SHARK_CATEGORIES = {
     "White Shark (Carcharodon carcharias)": 1,
     "Tiger Shark (Galeocerdo cuvier)": 0,
