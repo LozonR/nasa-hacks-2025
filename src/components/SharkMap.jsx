@@ -192,7 +192,7 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
         <div key={shark.id}>
           {layers.sharks.enabled && (
             <Marker
-              position={[shark.lat, shark.lng]}
+              position={shark.location}
               icon={selectedSharkId === shark.id ? sharkIconLarge : sharkIcon}
               eventHandlers={{
                 click: () => {
@@ -210,16 +210,12 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
                   <strong>{shark.name}</strong>
                   <br />
                   Species: {shark.species}
-                  <br />
-                  Tag ID: {shark.tagId}
-                  <br />
-                  Last Updated: {shark.lastUpdate}
                 </div>
               </Popup>
             </Marker>
           )}
 
-          {layers.foragingZones.enabled && (
+          {false && layers.foragingZones.enabled && (
             <Circle
               center={[shark.lat, shark.lng]}
               radius={shark.foragingRadius * 1000}
