@@ -10,7 +10,7 @@ import {
   useMapEvent
 } from "react-leaflet";
 import { Icon } from "leaflet";
-import { sampleSharks } from "../data/sampleSharks";
+import { backendAPI } from "../services/api";
 import { generateForagingHeatmap, sstZones } from "../data/heatmapData";
 import HeatmapLayer from "./HeatmapLayer";
 import LayerControls from "./LayerControls";
@@ -175,7 +175,7 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
         ))}
 
       {/* Shark Markers and Foraging Zones */}
-      {sampleSharks.map((shark) => (
+      {backendAPI.getSharks().map((shark) => (
         <div key={shark.id}>
           {layers.sharks.enabled && (
             <Marker

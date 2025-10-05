@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import SharkMap from "./components/SharkMap";
 import Dashboard from "./components/Dashboard";
 import Menu from "./components/Menu";
-import { sampleSharks } from "./data/sampleSharks";
+import { backendAPI } from "./services/api";
 import "./App.css";
 
 function App() {
@@ -10,8 +10,8 @@ function App() {
   const [currentView, setCurrentView] = useState("map");
   const zoomToSharkRef = useRef(null);
 
-  const handleRandomSharkZoom = () => {
-    const randomShark = sampleSharks[Math.floor(Math.random() * sampleSharks.length)];
+  const handleRandomSharkZoom = async () => {
+    const randomShark = await fetch('./api/sharks');
     if (zoomToSharkRef.current) {
       zoomToSharkRef.current(randomShark);
       setSelectedShark(randomShark);
