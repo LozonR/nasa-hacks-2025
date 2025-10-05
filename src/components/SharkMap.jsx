@@ -76,11 +76,6 @@ function MapController({ zoomToSharkRef }) {
 function SharkMap({ onSharkSelect, zoomToSharkRef }) {
   const [layers, setLayers] = useState({
     sharks: { name: "Shark Locations", enabled: true },
-    sst: {
-      name: "Sea Surface Temperature",
-      enabled: false,
-      legend: "Ocean temp zones",
-    },
     ppo: {
       name: "Photoplankton Overlay",
       enabled: false,
