@@ -38,7 +38,7 @@ def get_previous_location(shark_id: int):
 
 def updateShark(shark: Shark):
     if shark.initial_time_depth == 0:
-        shark.initial_time_depth = time.time()
+        shark.initial_time_depth = int(time.time())
 
     shark.prev_depth = shark.depth
     shark.depth = (max(12.5, calcDepth(shark.px_x, shark.px_y)/2) if SHARK_CATEGORIES[shark.species] == 0 else max(50, calcDepth(shark.px_x, shark.px_y))) if shark.depth == 0 else calcSharkDepth(shark)
@@ -151,22 +151,22 @@ def scavenging(shark: Shark):
             shark.predicted_location[0] = pxToCoords(shark.px_x + randint(-1, 1),
                                           shark.px_y + randint(-1, 1))[0] + shark.location[0]
     if SHARK_CATEGORIES[shark.species] == 1:
-        if time.time() - shark.prev_mode_time > 604800:  # 1 week
+        if int(time.time()) - shark.prev_mode_time > 604800:  # 1 week
             shark.prev_mode = shark.mode
             shark.mode = "transiting"
-            shark.prev_mode_time = time.time()
+            shark.prev_mode_time = int(time.time())
     else:
-        if time.time() - shark.prev_mode_time > 259200:  # 3 days
+        if int(time.time()) - shark.prev_mode_time > 259200:  # 3 days
             shark.prev_mode = shark.mode
             shark.mode = "transiting"
-            shark.prev_mode_time = time.time()
+            shark.prev_mode_time = int(time.time())
 
 
 def transiting(shark: Shark):
-    if time.time() - shark.prev_mode_time > 86400:  # 1 day
+    if int(time.time()) - shark.prev_mode_time > 86400:  # 1 day
         shark.prev_mode = shark.mode
         shark.mode = "scavenging"
-        shark.prev_mode_time = time.time()
+        shark.prev_mode_time = int(time.time())
         shark.predicted_location[1] = shark.location[1]
         shark.predicted_location[0] = shark.location[0]
     else:
@@ -255,7 +255,7 @@ def calcSharkDepth(shark):
     rand = randint(1, 100)
 
     if shark.depth_mode == "sinning":
-        shark.predicted_depth = numpy.sin(time.time() - shark.initial_time_depth) * (calcDepth(shark.px_x, shark.px_y) - 2) + calcDepth(shark.px_x, shark.px_y)/2
+        shark.predicted_depth = numpy.sin(int(time.time()) - shark.initial_time_depth) * (calcDepth(shark.px_x, shark.px_y) - 2) + calcDepth(shark.px_x, shark.px_y)/2
 
     if (shark.predicted_depth == (calcDepth(shark.px_x, shark.px_y) - 2) + calcDepth(shark.px_x, shark.px_y)/2 and shark.mode == "transiting") or shark.depth_mode == "gliding":
         shark.depth_mode = "gliding"
