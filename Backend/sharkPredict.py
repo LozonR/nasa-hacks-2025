@@ -26,9 +26,11 @@ def currentDepthOcean(latitude, longitude):
 
 
 def updateShark(shark: Shark):
+    if shark.initial_time_depth == 0:
+        shark.initial_time_depth = time.time()
+
     shark.prev_depth = shark.depth
-    shark.depth = max(12.5, calcDepth(shark.px_x, shark.px_y) /
-                      2) if SHARK_CATEGORIES[shark.species] == 0 else max(50, calcDepth(shark.px_x, shark.px_y))
+    shark.depth = (max(12.5, calcDepth(shark.px_x, shark.px_y)/2) if SHARK_CATEGORIES[shark.species] == 0 else max(50, calcDepth(shark.px_x, shark.px_y))) if shark.depth == None else calcSharkDepth(shark)
 
     vv = (shark.depth - shark.prev_depth)/60
 
@@ -263,4 +265,21 @@ def calcDepth(px_x, px_y):
     brightness = (red + green + blue) // 3
 
     depth = (brightness / 255) * 11000
-    return depth
+    return depth   
+
+def calcSharkDepth(shark):
+    if calcDepth(shark.px_x, shark.px_y) <= 3:
+        shark.predicted_depth = calcDepth(shark.px_x, shark.px_y)/2
+
+    rand = randint(1, 100)
+
+    if shark.depth_mode == "sinning":
+        shark.predicted_depth = numpy.sin(time.time() - shark.initial_time_depth) * (calcDepth(shark.px_x, shark.px_y) - 2) + calcDepth(shark.px_x, shark.px_y)/2
+
+    if (shark.predicted_depth == (calcDepth(shark.px_x, shark.px_y) - 2) + calcDepth(shark.px_x, shark.px_y)/2 and shark.mode == "transiting") or shark.depth_mode == "gliding":
+        shark.depth_mode = "gliding"
+        shark.predicted_depth = shark.depth + 2 + numpy.sqrt(3)
+
+        if (shark.predicted_depth > min(25, calcDepth(shark.px_x, shark.px_y)) and SHARK_CATEGORIES[shark.species] == 0) or (shark.predicted_depth > min(100, calcDepth(shark.px_x, shark.px_y)) and SHARK_CATEGORIES[shark.species] == 1):
+            shark.depth_mode = "sinning"
+    
