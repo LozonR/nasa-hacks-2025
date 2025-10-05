@@ -75,19 +75,19 @@ def get_shark_details(shark_id: int):
     sharksRaw = requests.get(f"{API}/pois.geojson/")
     sharksRawJSON = sharksRaw.json()
 
-    shark: None | Shark = None
+    chosenShark: None | Shark = None
 
     for shark in sharksRawJSON["features"]:
         properties = shark["properties"]
         location = shark["geometry"]["coordinates"]
 
         if properties["species"] in SHARK_CATEGORIES and properties["id"] == shark_id:
-            shark = Shark(properties["name"], properties["id"], properties["species"], [
+            chosenShark = Shark(properties["name"], properties["id"], properties["species"], [
                           location[0], location[1]])
 
-    if shark is not None:
-        sharkPredict.updateShark(shark)
-        return shark.__dict__
+    if chosenShark is not None:
+        sharkPredict.updateShark(chosenShark)
+        return chosenShark.__dict__
 
 
 @app.route("/api/sharks/journey/<int:shark_id>")

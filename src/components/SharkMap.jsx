@@ -6,6 +6,7 @@ import {
     Popup,
     Circle,
     Rectangle,
+    Polyline,
     useMap,
     useMapEvent,
 } from "react-leaflet";
@@ -113,6 +114,17 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
 
         fun();
     }, []);
+
+    const [predictionLine, setPredictionLine] = useState([])
+
+    useEffect(() => {
+        backendAPI.getSharkDetails(selectedSharkId).then((shark) => {
+            setPredictionLine([
+                [shark.predicted_location[1], shark.predicted_location[0]],
+                [shark.location[1], shark.location[0]]
+            ])
+        })
+    }, [selectedSharkId])
 
     const toggleLayer = (layerKey) => {
         setLayers((prev) => ({
@@ -239,6 +251,10 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
                     )}
                 </div>
             ))}
+
+            {predictionLine != [] ?
+                <Polyline positions={predictionLine} /> : (<></>)
+            }
 
             <MapMoveListener onMove={(center) => { }} />
 
