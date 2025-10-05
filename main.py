@@ -1,5 +1,6 @@
 from flask import Flask, send_file
 import requests
+import random
 
 app = Flask(__name__)
 
@@ -50,6 +51,34 @@ def index():
 
 @app.route("/api/sharks")
 def get_sharks():
+    sharksRaw = requests.get(f"{API}/pois.geojson/")
+    sharksRawJSON = sharksRaw.json()
+
+    sharks = []
+
+    for shark in sharksRawJSON["features"]:
+        properties = shark["properties"]
+        location = shark["geometry"]["coordinates"]
+
+        if properties["species"] in SHARK_CATEGORIES:
+            sharks.append(
+                Shark(
+                    properties["name"],
+                    properties["id"],
+                    properties["species"],
+                    (location[0], location[1])
+                ))
+
+    sharksJSON = []
+
+    for shark in sharks:
+        sharksJSON.append(shark.__dict__)
+
+    return random.choice(sharksJSON)
+
+
+@app.route("/api/sharks/random")
+def get_random_shark():
     sharksRaw = requests.get(f"{API}/pois.geojson/")
     sharksRawJSON = sharksRaw.json()
 
