@@ -11,10 +11,13 @@ function App() {
   const zoomToSharkRef = useRef(null);
 
   const handleRandomSharkZoom = async () => {
-    const randomShark = await fetch("./api/sharks");
-    if (zoomToSharkRef.current) {
-      zoomToSharkRef.current(randomShark);
-      setSelectedShark(randomShark);
+    const sharks = await backendAPI.getSharks();
+    if (sharks && sharks.length > 0) {
+      const randomShark = sharks[Math.floor(Math.random() * sharks.length)];
+      if (zoomToSharkRef.current) {
+        zoomToSharkRef.current(randomShark);
+        setSelectedShark(randomShark);
+      }
     }
   };
 
