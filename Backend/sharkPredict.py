@@ -30,7 +30,7 @@ def updateShark(uid: int):
             break
 
     shark.prev_depth = shark.depth
-    shark.depth = calcDepth(shark.px_x, shark.px_y)/2
+    shark.depth = max(12.5, calcDepth(shark.px_x, shark.px_y)/2) if SHARK_CATEGORIES[shark.species] == 0 else max(50, calcDepth(shark.px_x, shark.px_y))
 
     vv = (shark.depth - shark.prev_depth)/60
 
