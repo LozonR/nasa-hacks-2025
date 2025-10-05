@@ -6,9 +6,6 @@ function Menu({ onViewChange, currentView, onRandomSharkZoom }) {
 
   const menuItems = [
     { id: 'map', icon: '🗺️', label: 'Live Map' },
-    { id: 'analytics', icon: '📊', label: 'Analytics' },
-    { id: 'predictions', icon: '🎯', label: 'Predictions' },
-    { id: 'tag-designer', icon: '🏷️', label: 'Tag Designer' },
     { id: 'data-sources', icon: '🛰️', label: 'Data Sources' },
     { id: 'about', icon: 'ℹ️', label: 'About' }
   ]

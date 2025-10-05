@@ -90,11 +90,6 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
       enabled: false,
       legend: "Blue (low) → Red (high)",
     },
-    sst: {
-      name: "Sea Surface Temperature",
-      enabled: false,
-      legend: "Ocean temp zones",
-    },
     ppo: {
       name: "Photoplankton Overlay",
       enabled: false,
@@ -174,33 +169,6 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
 
       {/* Heatmap Layer */}
       {layers.heatmap.enabled && <HeatmapLayer points={heatmapPoints} />}
-
-      {/* SST Zones */}
-      {layers.sst.enabled &&
-        sstZones.map((zone, idx) => (
-          <Rectangle
-            key={idx}
-            bounds={zone.bounds}
-            pathOptions={{
-              color: zone.color,
-              fillColor: zone.color,
-              fillOpacity: 0.15,
-              weight: 1,
-            }}
-          >
-            <Popup
-              eventHandlers={{
-                close: () => setSelectedSharkId(null),
-              }}
-            >
-              <div>
-                <strong>SST Zone</strong>
-                <br />
-                Temperature: {zone.temp}
-              </div>
-            </Popup>
-          </Rectangle>
-        ))}
 
       {/* Shark Markers and Foraging Zones */}
       {sharks.map((shark) => (
