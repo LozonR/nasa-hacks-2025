@@ -1,11 +1,10 @@
-from main import Shark, SHARK_CATEGORIES
+from main import Shark, SHARK_CATEGORIES, get_sharks
 
 import time
 import numpy
 from PIL import Image
 from random import randint
 
-sharks = []
 isDay = True
 currentShark = 0
 
@@ -22,8 +21,13 @@ def pxToCoords(px_x, px_y):
 def currentDepthOcean(latitude, longitude):
     return None
 
-def updateSharks():
-    shark = sharks[currentShark]
+def updateShark(uid: int):
+    shark = None
+
+    for s in get_sharks():
+        if s['id'] == uid:
+            shark = s
+            break
 
     vv = (shark.depth - shark.prev_depth)/60
 
@@ -40,19 +44,46 @@ def updateSharks():
             shark.predicted_location[0] = shark.location[0]
             shark.predicted_location[1] = shark.location[1]
 
-    if shark.type == "great white":
-        if shark.mode == "scavenging":
+    if shark.mode == "scavenging":
+        if SHARK_CATEGORIES[shark.species] == 1:
             if isDay:
-                
+                scavenging(shark)
                 pass
             else:
                 shark.predicted_location[0] = shark.location[0]
                 shark.predicted_location[1] = shark.location[1]
                 shark.prev_mode = shark.mode
                 shark.mode = "sleeping"
-        elif shark.mode == "transiting":
-            
-            pass
+        elif SHARK_CATEGORIES[shark.species] == 0:
+            if not isDay:
+                scavenging(shark)
+                pass
+            else:
+                shark.predicted_location[0] = shark.location[0]
+                shark.predicted_location[1] = shark.location[1]
+                shark.prev_mode = shark.mode
+                shark.mode = "sleeping"
+    elif shark.mode == "transiting":
+        if SHARK_CATEGORIES[shark.species] == 1:
+            if isDay:
+                transiting(shark)
+                pass
+            else:
+                shark.predicted_location[0] = shark.location[0]
+                shark.predicted_location[1] = shark.location[1]
+                shark.prev_mode = shark.mode
+                shark.mode = "sleeping"
+        elif SHARK_CATEGORIES[shark.species] == 0:
+            if not isDay:
+                transiting(shark)
+                pass
+            else:
+                shark.predicted_location[0] = shark.location[0]
+                shark.predicted_location[1] = shark.location[1]
+                shark.prev_mode = shark.mode
+                shark.mode = "sleeping"
+    else:
+        pass
 
 
 def scavenging(shark: Shark):
@@ -173,3 +204,15 @@ def comparePixel(px_x, px_y):
     elif max(red, green, blue) == red:
         return 1
     
+def calcDepth(px_x, px_y):
+    depth_img = Image.open("public/depth.png") #path to depth image
+    depth_color = depth_img.getpixel((px_x, px_y))
+    
+    red = depth_color[0]
+    green = depth_color[1]
+    blue = depth_color[2]
+
+    brightness = (red + green + blue) // 3
+
+    depth = (brightness / 255) * 11000
+    return depth   
