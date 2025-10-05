@@ -97,4 +97,4 @@ def get_previous_location(shark_id: int):
     time = previous_spot["dt_move"]
     prev_location = TravelSpot(coordinates[0], coordinates[1], time)
 
-    return prev_location.__dict__
+    return prev_location

@@ -1,4 +1,5 @@
 from common import Shark, SHARK_CATEGORIES
+from main import get_previous_location
 
 import time
 import numpy
@@ -12,17 +13,13 @@ currentShark = 0
 def coordsToPx(latitude, longitude):
     px_x = 24*longitude
     px_y = 24*latitude
-    return (px_x, px_y)
+    return [px_x, px_y]
 
 
 def pxToCoords(px_x, px_y):
     latitude = px_y/24
     longitude = px_x/24
-    return (latitude, longitude)
-
-
-def currentDepthOcean(latitude, longitude):
-    return None
+    return [latitude, longitude]
 
 
 def updateShark(shark: Shark):
@@ -30,14 +27,14 @@ def updateShark(shark: Shark):
         shark.initial_time_depth = time.time()
 
     shark.prev_depth = shark.depth
-    shark.depth = (max(12.5, calcDepth(shark.px_x, shark.px_y)/2) if SHARK_CATEGORIES[shark.species] == 0 else max(50, calcDepth(shark.px_x, shark.px_y))) if shark.depth == None else calcSharkDepth(shark)
+    shark.depth = (max(12.5, calcDepth(shark.px_x, shark.px_y)/2) if SHARK_CATEGORIES[shark.species] == 0 else max(50, calcDepth(shark.px_x, shark.px_y))) if shark.depth == 0 else calcSharkDepth(shark)
 
     if shark.depth is None:
         shark.depth = 0
     if shark.prev_depth is None:
         shark.prev_depth = 0
 
-    vv = (shark.depth - shark.prev_depth)/60
+    shark.prev_location = (get_previous_location(shark.id).lat, get_previous_location(shark.id).long)
 
     shark.facing = [
         shark.px_x -
@@ -46,7 +43,8 @@ def updateShark(shark: Shark):
         coordsToPx(shark.prev_location[0], shark.prev_location[1])[1]
     ]
 
-    shark.facing = shark.facing / numpy.linalg.norm(shark.facing)
+    shark.facing[0] = shark.facing[0] / float(numpy.linalg.norm(shark.facing))
+    shark.facing[1] = shark.facing[1] / float(numpy.linalg.norm(shark.facing))
 
     if shark.mode == "sleeping":
         if isDay:
@@ -102,59 +100,41 @@ def scavenging(shark: Shark):
         shark.px_x + shark.facing[0], shark.px_y + shark.facing[1]
     ) != -999:
         shark.predicted_location[1] = pxToCoords(
-            shark.px_x + shark.facing[0], shark.px_y + shark.facing[1])[1]
+            shark.px_x + shark.facing[0], shark.px_y + shark.facing[1])[1] + shark.location[1]
         shark.predicted_location[0] = pxToCoords(
-            shark.px_x + shark.facing[0], shark.px_y + shark.facing[1])[0]
+            shark.px_x + shark.facing[0], shark.px_y + shark.facing[1])[0] + shark.location[0]
     else:
         scan = scanSquare(shark.px_x, shark.px_y)
         maxIndex = scan.index(max(scan))
         if maxIndex == 0:
-            shark.predicted_location[1] = (
-                1/shark.speed)*pxToCoords(shark.px_x - 1, shark.px_y - 1)[1]
-            shark.predicted_location[0] = (
-                1/shark.speed)*pxToCoords(shark.px_x - 1, shark.px_y - 1)[0]
+            shark.predicted_location[1] = pxToCoords(shark.px_x - 1, shark.px_y - 1)[1] + shark.location[1]
+            shark.predicted_location[0] = pxToCoords(shark.px_x - 1, shark.px_y - 1)[0] + shark.location[0]
         elif maxIndex == 1:
-            shark.predicted_location[1] = (
-                1/shark.speed)*pxToCoords(shark.px_x, shark.px_y - 1)[1]
-            shark.predicted_location[0] = (
-                1/shark.speed)*pxToCoords(shark.px_x, shark.px_y - 1)[0]
+            shark.predicted_location[1] = pxToCoords(shark.px_x, shark.px_y - 1)[1] + shark.location[1]
+            shark.predicted_location[0] = pxToCoords(shark.px_x, shark.px_y - 1)[0] + shark.location[0]
         elif maxIndex == 2:
-            shark.predicted_location[1] = (
-                1/shark.speed)*pxToCoords(shark.px_x + 1, shark.px_y - 1)[1]
-            shark.predicted_location[0] = (
-                1/shark.speed)*pxToCoords(shark.px_x + 1, shark.px_y - 1)[0]
+            shark.predicted_location[1] = pxToCoords(shark.px_x + 1, shark.px_y - 1)[1] + shark.location[1]
+            shark.predicted_location[0] = pxToCoords(shark.px_x + 1, shark.px_y - 1)[0] + shark.location[0]
         elif maxIndex == 3:
-            shark.predicted_location[1] = (
-                1/shark.speed)*pxToCoords(shark.px_x - 1, shark.px_y)[1]
-            shark.predicted_location[0] = (
-                1/shark.speed)*pxToCoords(shark.px_x - 1, shark.px_y)[0]
+            shark.predicted_location[1] = pxToCoords(shark.px_x - 1, shark.px_y)[1] + shark.location[1]
+            shark.predicted_location[0] = pxToCoords(shark.px_x - 1, shark.px_y)[0] + shark.location[0]
         elif maxIndex == 4:
-            shark.predicted_location[1] = (
-                1/shark.speed)*pxToCoords(shark.px_x + 1, shark.px_y)[1]
-            shark.predicted_location[0] = (
-                1/shark.speed)*pxToCoords(shark.px_x + 1, shark.px_y)[0]
+            shark.predicted_location[1] = pxToCoords(shark.px_x + 1, shark.px_y)[1] + shark.location[1]
+            shark.predicted_location[0] = pxToCoords(shark.px_x + 1, shark.px_y)[0] + shark.location[0]
         elif maxIndex == 5:
-            shark.predicted_location[1] = (
-                1/shark.speed)*pxToCoords(shark.px_x - 1, shark.px_y + 1)[1]
-            shark.predicted_location[0] = (
-                1/shark.speed)*pxToCoords(shark.px_x - 1, shark.px_y + 1)[0]
+            shark.predicted_location[1] = pxToCoords(shark.px_x - 1, shark.px_y + 1)[1] + shark.location[1]
+            shark.predicted_location[0] = pxToCoords(shark.px_x - 1, shark.px_y + 1)[0] + shark.location[0]
         elif maxIndex == 6:
-            shark.predicted_location[1] = (
-                1/shark.speed)*pxToCoords(shark.px_x, shark.px_y + 1)[1]
-            shark.predicted_location[0] = (
-                1/shark.speed)*pxToCoords(shark.px_x, shark.px_y + 1)[0]
+            shark.predicted_location[1] = pxToCoords(shark.px_x, shark.px_y + 1)[1] + shark.location[1]
+            shark.predicted_location[0] = pxToCoords(shark.px_x, shark.px_y + 1)[0] + shark.location[0]
         elif maxIndex == 7:
-            shark.predicted_location[1] = (
-                1/shark.speed)*pxToCoords(shark.px_x + 1, shark.px_y + 1)[1]
-            shark.predicted_location[0] = (
-                1/shark.speed)*pxToCoords(shark.px_x + 1, shark.px_y + 1)[0]
+            shark.predicted_location[1] = pxToCoords(shark.px_x + 1, shark.px_y + 1)[1] + shark.location[1]
+            shark.predicted_location[0] = pxToCoords(shark.px_x + 1, shark.px_y + 1)[0] + shark.location[0]
         else:
-            shark.predicted_location[1] = (
-                1/shark.speed)*pxToCoords(shark.px_x + randint(-1, 1),
-                                          shark.px_y + randint(-1, 1))[1]
-            shark.predicted_location[0] = (
-                1/shark.speed)*pxToCoords(shark.px_x + randint(-1, 1),
-                                          shark.px_y + randint(-1, 1))[0]
+            shark.predicted_location[1] = pxToCoords(shark.px_x + randint(-1, 1),
+                                          shark.px_y + randint(-1, 1))[1] + shark.location[1]
+            shark.predicted_location[0] = pxToCoords(shark.px_x + randint(-1, 1),
+                                          shark.px_y + randint(-1, 1))[0] + shark.location[0]
     if SHARK_CATEGORIES[shark.species] == 1:
         if time.time() - shark.prev_mode_time > 604800:  # 1 week
             shark.prev_mode = shark.mode
@@ -165,8 +145,6 @@ def scavenging(shark: Shark):
             shark.prev_mode = shark.mode
             shark.mode = "transiting"
             shark.prev_mode_time = time.time()
-
-    return (shark.predicted_location[0], shark.predicted_location[1])
 
 
 def transiting(shark: Shark):
@@ -184,45 +162,29 @@ def transiting(shark: Shark):
             direction = randint(0, 7)
 
         if direction == 0:
-            shark.predicted_location[1] = (
-                1/shark.speed)*pxToCoords(shark.px_x - 1, shark.px_y - 1)[1]
-            shark.predicted_location[0] = (
-                1/shark.speed)*pxToCoords(shark.px_x - 1, shark.px_y - 1)[0]
+            shark.predicted_location[1] = pxToCoords(shark.px_x - 1, shark.px_y - 1)[1] + shark.location[1]
+            shark.predicted_location[0] = pxToCoords(shark.px_x - 1, shark.px_y - 1)[0] + shark.location[0]
         elif direction == 1:
-            shark.predicted_location[1] = (
-                1/shark.speed)*pxToCoords(shark.px_x, shark.px_y - 1)[1]
-            shark.predicted_location[0] = (
-                1/shark.speed)*pxToCoords(shark.px_x, shark.px_y - 1)[0]
+            shark.predicted_location[1] = pxToCoords(shark.px_x, shark.px_y - 1)[1] + shark.location[1]
+            shark.predicted_location[0] = pxToCoords(shark.px_x, shark.px_y - 1)[0] + shark.location[0]
         elif direction == 2:
-            shark.predicted_location[1] = (
-                1/shark.speed)*pxToCoords(shark.px_x + 1, shark.px_y - 1)[1]
-            shark.predicted_location[0] = (
-                1/shark.speed)*pxToCoords(shark.px_x + 1, shark.px_y - 1)[0]
+            shark.predicted_location[1] = pxToCoords(shark.px_x + 1, shark.px_y - 1)[1] + shark.location[1]
+            shark.predicted_location[0] = pxToCoords(shark.px_x + 1, shark.px_y - 1)[0] + shark.location[0]
         elif direction == 3:
-            shark.predicted_location[1] = (
-                1/shark.speed)*pxToCoords(shark.px_x - 1, shark.px_y)[1]
-            shark.predicted_location[0] = (
-                1/shark.speed)*pxToCoords(shark.px_x - 1, shark.px_y)[0]
+            shark.predicted_location[1] = pxToCoords(shark.px_x - 1, shark.px_y)[1] + shark.location[1]
+            shark.predicted_location[0] = pxToCoords(shark.px_x - 1, shark.px_y)[0] + shark.location[0]
         elif direction == 4:
-            shark.predicted_location[1] = (
-                1/shark.speed)*pxToCoords(shark.px_x + 1, shark.px_y)[1]
-            shark.predicted_location[0] = (
-                1/shark.speed)*pxToCoords(shark.px_x + 1, shark.px_y)[0]
+            shark.predicted_location[1] = pxToCoords(shark.px_x + 1, shark.px_y)[1] + shark.location[1]
+            shark.predicted_location[0] = pxToCoords(shark.px_x + 1, shark.px_y)[0] + shark.location[0]
         elif direction == 5:
-            shark.predicted_location[1] = (
-                1/shark.speed)*pxToCoords(shark.px_x - 1, shark.px_y + 1)[1]
-            shark.predicted_location[0] = (
-                1/shark.speed)*pxToCoords(shark.px_x - 1, shark.px_y + 1)[0]
+            shark.predicted_location[1] = pxToCoords(shark.px_x - 1, shark.px_y + 1)[1] + shark.location[1]
+            shark.predicted_location[0] = pxToCoords(shark.px_x - 1, shark.px_y + 1)[0] + shark.location[0]
         elif direction == 6:
-            shark.predicted_location[1] = (
-                1/shark.speed)*pxToCoords(shark.px_x, shark.px_y + 1)[1]
-            shark.predicted_location[0] = (
-                1/shark.speed)*pxToCoords(shark.px_x, shark.px_y + 1)[0]
+            shark.predicted_location[1] = pxToCoords(shark.px_x, shark.px_y + 1)[1] + shark.location[1]
+            shark.predicted_location[0] = pxToCoords(shark.px_x, shark.px_y + 1)[0] + shark.location[0]
         elif direction == 7:
-            shark.predicted_location[1] = (
-                1/shark.speed)*pxToCoords(shark.px_x + 1, shark.px_y + 1)[1]
-            shark.predicted_location[0] = (
-                1/shark.speed)*pxToCoords(shark.px_x + 1, shark.px_y + 1)[0]
+            shark.predicted_location[1] = pxToCoords(shark.px_x + 1, shark.px_y + 1)[1] + shark.location[1]
+            shark.predicted_location[0] = pxToCoords(shark.px_x + 1, shark.px_y + 1)[0] + shark.location[0]
 
 
 def scanSquare(px_x, px_y):
@@ -268,7 +230,7 @@ def calcDepth(px_x, px_y):
 
     brightness = (red + green + blue) // 3
 
-    depth = (brightness / 255) * 11000
+    depth = (brightness / 255) * 100
     return depth   
 
 def calcSharkDepth(shark):
