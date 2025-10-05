@@ -27,6 +27,7 @@ const sharkIcon = new Icon({
 
 function MapMoveListener({ onMove }) {
   const map = useMap();
+
   useMapEvent("moveend", () => {
     const center = map.getCenter();
     let wrappedLng = center.lng;
@@ -38,6 +39,7 @@ function MapMoveListener({ onMove }) {
       wrappedLng = center.lng + 359;
       wrapped = true;
     }
+
     if (wrapped) {
       map.setView([center.lat, wrappedLng], map.getZoom(), { animate: false});
     }
@@ -45,6 +47,8 @@ function MapMoveListener({ onMove }) {
   });
   return null;
 }
+
+
 
 const sharkIconLarge = new Icon({
   iconUrl: "/static/shark.webp",
