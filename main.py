@@ -2,7 +2,7 @@ from flask import Flask, send_file
 import requests
 import random
 from common import Shark, SHARK_CATEGORIES, TravelSpot, API
-from Backend import sharkPredict
+from backend import sharkPredict
 
 app = Flask(__name__)
 

@@ -1,4 +1,4 @@
-from Backend import sharkPredict
+from backend import sharkPredict
 import requests
 from main import API
 from common import Shark, SHARK_CATEGORIES
