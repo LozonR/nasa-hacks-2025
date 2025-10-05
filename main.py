@@ -32,6 +32,7 @@ def get_sharks():
                 properties["species"],
                 (location[0], location[1])
             )
+            #sharkPredict.updateShark(shark)
             sharks.append(shark)
 
     sharksJSON = []
