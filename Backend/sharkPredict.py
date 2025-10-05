@@ -21,14 +21,7 @@ def pxToCoords(px_x, px_y):
 def currentDepthOcean(latitude, longitude):
     return None
 
-def updateShark(uid: int):
-    shark = None
-
-    for s in get_sharks():
-        if s['id'] == uid:
-            shark = s
-            break
-
+def updateShark(shark: Shark):
     shark.prev_depth = shark.depth
     shark.depth = max(12.5, calcDepth(shark.px_x, shark.px_y)/2) if SHARK_CATEGORIES[shark.species] == 0 else max(50, calcDepth(shark.px_x, shark.px_y))
 

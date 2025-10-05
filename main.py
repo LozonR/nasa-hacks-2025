@@ -2,6 +2,7 @@ from flask import Flask, send_file
 import requests
 import random
 import time
+from Backend import sharkPredict
 
 app = Flask(__name__)
 
@@ -36,12 +37,11 @@ class Shark:
             mode: str = "",
             prev_mode: str = "",
             prev_mode_time: int = 0,
-            depth: float =0.0,
-            prev_depth: float =0.0,
+            depth: float = 0.0,
+            prev_depth: float = 0.0,
             px_x: int = 0,
             px_y: int = 0,
             facing: tuple[int, int] = (0, 0),
-            
     ):
         self.name = name
         self.id = id
@@ -79,13 +79,14 @@ def get_sharks():
         location = shark["geometry"]["coordinates"]
 
         if properties["species"] in SHARK_CATEGORIES:
-            sharks.append(
-                Shark(
-                    properties["name"],
-                    properties["id"],
-                    properties["species"],
-                    (location[0], location[1])
-                ))
+            shark = Shark(
+                properties["name"],
+                properties["id"],
+                properties["species"],
+                (location[0], location[1])
+            )
+            sharkPredict.updateShark(shark)
+            sharks.append(shark)
 
     sharksJSON = []
 
@@ -134,6 +135,7 @@ def get_shark_journey(shark_id: int):
         locations.append(TravelSpot(coordinates[0], coordinates[1], time))
 
     return locations
+
 
 @app.route("/api/sharks/previous/<int:shark_id>")
 def get_previous_location(shark_id: int):
