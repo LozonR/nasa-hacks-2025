@@ -42,18 +42,14 @@ function MapMoveListener({ onMove }) {
       wrapped = true;
     } 
 
-
     if (wrapped) {
       map.setView([bounds.lat, wrappedLng], map.getZoom(), { animate: false});
-    } else if (map.getZoom() > 7) {
-      map.setView([bounds.lat, center.lng], 7, { animate: false});
     } else {
       map.setView([bounds.lat, center.lng], map.getZoom(), { animate: false});
     }
 
 
     
-
     onMove({ lat: center.lat, lng: wrappedLng });
   });
   return null;
