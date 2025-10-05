@@ -134,3 +134,17 @@ def get_shark_journey(shark_id: int):
         locations.append(TravelSpot(coordinates[0], coordinates[1], time))
 
     return locations
+
+@app.route("/api/sharks/previous/<int:shark_id>")
+def get_previous_location(shark_id: int):
+    travel = requests.get(f"{API}/pois/{shark_id}/motion/with-meta/").json()
+
+    if len(travel["motion"]) < 2:
+        return {"error": "Not enough data"}
+
+    previous_spot = travel["motion"][-2]
+    coordinates = previous_spot["point"]["coordinates"]
+    time = previous_spot["dt_move"]
+    prev_location = TravelSpot(coordinates[0], coordinates[1], time)
+
+    return prev_location.__dict__
