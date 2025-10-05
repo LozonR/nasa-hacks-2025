@@ -31,36 +31,6 @@ function App() {
             </div>
           </>
         );
-      case "analytics":
-        return (
-          <div className="view-placeholder">
-            <h2>📊 Analytics Dashboard</h2>
-            <p>
-              Coming soon: Time-series analysis, migration patterns, feeding
-              statistics
-            </p>
-          </div>
-        );
-      case "predictions":
-        return (
-          <div className="view-placeholder">
-            <h2>🎯 Predictive Models</h2>
-            <p>
-              Coming soon: ML-based foraging habitat predictions, seasonal
-              patterns
-            </p>
-          </div>
-        );
-      case "tag-designer":
-        return (
-          <div className="view-placeholder">
-            <h2>🏷️ Smart Tag Designer</h2>
-            <p>
-              Coming soon: 3D visualization of conceptual tag with diet tracking
-              sensors
-            </p>
-          </div>
-        );
       case "data-sources":
         return (
           <div className="view-placeholder">
