@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -90,7 +90,17 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
     },
   });
 
+    const [sharks, setSharks] = useState([])
+
   const [selectedSharkId, setSelectedSharkId] = useState(null);
+
+    useEffect(() => {
+        const fun = async () => {
+            setSharks(await backendAPI.getSharks())
+        }
+        
+        fun()
+    }, [])
 
   const toggleLayer = (layerKey) => {
     setLayers((prev) => ({
@@ -175,7 +185,7 @@ function SharkMap({ onSharkSelect, zoomToSharkRef }) {
         ))}
 
       {/* Shark Markers and Foraging Zones */}
-      {backendAPI.getSharks().map((shark) => (
+      {sharks.map((shark) => (
         <div key={shark.id}>
           {layers.sharks.enabled && (
             <Marker

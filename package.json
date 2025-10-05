@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --outDir static",
+    "build": "vite build --outDir static --mode development",
+    "release": "vite build --outDir static",
     "preview": "vite preview"
   },
   "dependencies": {
