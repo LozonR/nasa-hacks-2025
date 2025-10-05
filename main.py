@@ -1,7 +1,46 @@
 from flask import Flask, send_file
-import API.sharks
+import requests
 
 app = Flask(__name__)
+
+# API = "https://www.mapotic.com/api/v1/maps/3413/pois.geojson/"
+API = "https://www.mapotic.com/api/v1/maps/3413"
+
+SHARK_CATEGORIES = {
+    "White Shark (Carcharodon carcharias)": 1,
+    "Tiger Shark (Galeocerdo cuvier)": 0,
+    "Blacktip Shark (Carcharhinus limbatus)": 0,
+    "Shortfin Mako Shark (Isurus oxyrinchus)": 1,
+    "Blue Shark (Prionace glauca)": 1,
+    "Hammerhead Shark (Sphyrnidae)": 0,
+    "Silky Shark (Carcharhinus falciformis)": 0,
+    "Bull Shark (Carcharhinus leucas)": 0,
+    "Scalloped Hammerhead (Sphyrna lewini)": 0,
+    "Whale Shark (Rhincodon typus)": 0,
+    "Great Hammerhead (Sphyrna mokarran)": 0,
+    "Dusky Shark (Carcharhinus obscurus)": 0
+}
+
+
+class Shark:
+    def __init__(
+            self,
+            name: str,
+            id: int,
+            species: str,
+            location: (float, float)
+    ):
+        self.name = name
+        self.id = id
+        self.species = species
+        self.location = location
+
+
+class TravelSpot:
+    def __init__(self, lat: float, long: float, date: str):
+        self.lat = lat
+        self.long = long
+        self.date = date
 
 
 @app.route("/")
@@ -11,7 +50,24 @@ def index():
 
 @app.route("/api/sharks")
 def get_sharks():
-    sharks = API.sharks.get_sharks()
+    sharksRaw = requests.get(f"{API}/pois.geojson/")
+    sharksRawJSON = sharksRaw.json()
+
+    sharks = []
+
+    for shark in sharksRawJSON["features"]:
+        properties = shark["properties"]
+        location = shark["geometry"]["coordinates"]
+
+        if properties["species"] in SHARK_CATEGORIES:
+            sharks.append(
+                Shark(
+                    properties["name"],
+                    properties["id"],
+                    properties["species"],
+                    (location[0], location[1])
+                ))
+
     sharksJSON = []
 
     for shark in sharks:
@@ -22,11 +78,12 @@ def get_sharks():
 
 @app.route("/api/sharks/journey/<int:shark_id>")
 def get_shark_journey(shark_id: int):
-    journey = API.sharks.get_travel_log(shark_id)
+    travel = requests.get(f"{API}/pois/{shark_id}/motion/with-meta/").json()
 
     locations = []
-
-    for loc in journey.locations:
-        locations.append(loc.__dict__)
+    for spot in travel["motion"]:
+        coordinates = spot["point"]["coordinates"]
+        time = spot["dt_move"]
+        locations.append(TravelSpot(coordinates[0], coordinates[1], time))
 
     return locations
